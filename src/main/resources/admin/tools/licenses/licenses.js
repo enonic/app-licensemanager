@@ -2,7 +2,7 @@ var mustacheLib = require('/lib/xp/mustache');
 var portalLib = require('/lib/xp/portal');
 var authLib = require('/lib/xp/auth');
 
-var view = resolve('page.html');
+var view = resolve('licenses.html');
 
 exports.get = function () {
     var user = authLib.getUser();
