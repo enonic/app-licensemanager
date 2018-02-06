@@ -1,0 +1,39 @@
+plugins {
+    id 'com.enonic.xp.app' version '1.0.17'
+}
+
+apply plugin: 'com.enonic.xp.app'
+apply plugin: 'maven'
+
+app {
+    name = project.appName
+    displayName = 'License Manager'
+    vendorName = 'Enonic AS'
+    vendorUrl = 'http://enonic.com'
+    systemVersion = "${xpVersion}"
+}
+
+dependencies {
+    compile "com.enonic.xp:core-api:${xpVersion}"
+    compile "com.enonic.xp:portal-api:${xpVersion}"
+    include "com.enonic.xp:lib-portal:${xpVersion}"
+    include "com.enonic.xp:lib-auth:${xpVersion}"
+    include "com.enonic.xp:lib-mustache:${xpVersion}"
+    include 'com.enonic.lib:license:1.0.0-SNAPSHOT'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url 'http://repo.enonic.com/public'
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository( url: 'http://repo.enonic.com/artifactory/public' )
+        }
+    }
+}

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Generator Test</title>
+    <link rel="shortcut icon" href="{{assetsUri}}/img/favicon.svg">
+    <link rel="shortcut icon" href="{{assetsUri}}/img/favicon.png">
+    <link rel="stylesheet" type="text/css" href="{{assetsUri}}/css/bulma.css">
+    <link rel="stylesheet" type="text/css" href="{{assetsUri}}/css/main.css">
+</head>
+<body>
+<section class="hero is-info">
+    <div class="hero-body">
+        <div class="container">
+            <h2 class="title">License Generator Test</h2>
+        </div>
+    </div>
+</section>
+<br/>
+<section>
+    <div class="container has-text-centered">
+        <div class="columns">
+
+            <div class="column is-four-quarters box">
+
+                <!-- Key Pair -->
+                <div class="container is-fluid">
+                    <h5 class="title is-5">Key Pair</h5>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Key Pair</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <textarea class="textarea js-keypair" rows="6"></textarea>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Private Key</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <input class="input js-privatekey" type="text">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Public Key</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <input class="input js-publickey" type="text">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-grouped">
+                        <div class="control is-success">
+                            <button class="button is-warning js-generate-key-btn">Generate Key Pair</button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <!-- License -->
+                <div class="container is-fluid">
+                    <h5 class="title is-5">License Details</h5>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Issued By</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <input class="input js-license-issuedBy" type="text" placeholder="Issued to" value="">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Issued To</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <input class="input js-license-issuedTo" type="text" placeholder="Issued by" value="">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Issue Time</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <input class="input js-license-issued" type="text" placeholder="Date time" value="{{issueTime}}">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Expiration Time</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <input class="input js-license-expiry" type="text" placeholder="Date time" value="{{expiryTime}}">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-horizontal">
+                        <div class="columns">
+                            <div class="column is-8 is-offset-5">
+                                <div class="field has-addons">
+                                    <p class="control">
+                                        <input class="input js-license-key1" type="text" placeholder="Custom param key">
+                                    </p>
+                                    <p class="control">
+                                        <a class="button is-static">Key</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="column is-8">
+                                <div class="field has-addons">
+                                    <p class="control">
+                                        <input class="input js-license-value1" type="text" placeholder="Custom param value">
+                                    </p>
+                                    <p class="control">
+                                        <a class="button is-static">Value</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="columns">
+                            <div class="column is-8 is-offset-5">
+                                <div class="field has-addons">
+                                    <p class="control">
+                                        <input class="input js-license-key2" type="text" placeholder="Custom param key">
+                                    </p>
+                                    <p class="control">
+                                        <a class="button is-static">Key</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="column is-8">
+                                <div class="field has-addons">
+                                    <p class="control">
+                                        <input class="input js-license-value2" type="text" placeholder="Custom param value">
+                                    </p>
+                                    <p class="control">
+                                        <a class="button is-static">Value</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="columns">
+                            <div class="column is-8 is-offset-5">
+                                <div class="field has-addons">
+                                    <p class="control">
+                                        <input class="input js-license-key3" type="text" placeholder="Custom param key">
+                                    </p>
+                                    <p class="control">
+                                        <a class="button is-static">Key</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="column is-8">
+                                <div class="field has-addons">
+                                    <p class="control">
+                                        <input class="input js-license-value3" type="text" placeholder="Custom param value">
+                                    </p>
+                                    <p class="control">
+                                        <a class="button is-static">Value</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-grouped">
+                        <div class="control is-success">
+                            <button class="button is-info js-generate-btn">Generate License</button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <!-- Generated License -->
+                <div class="container is-fluid js-generated-license">
+                    <h5 class="title is-5">Generated License</h5>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">License</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <textarea class="textarea js-license" rows="10"></textarea>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-grouped">
+                        <div class="control is-success">
+                            <button class="button is-info js-validate-btn">Validate License</button>
+                        </div>
+                        <div class="column is-4 is-offset-2">
+                            <span class="tag is-success js-valid-license" style="display: none">License is Valid</span>
+                            <span class="tag is-danger js-invalid-license" style="display: none">License is Invalid</span>
+                            <span class="tag is-warning js-expired-license" style="display: none">License has Expired</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div style="height: 50px;"></div>
+</section>
+
+<script src="{{assetsUri}}/js/main.js" data-baseurl="{{baseUri}}" data-generateUrl="{{generateUrl}}"
+        data-validateUrl="{{validateUrl}}" data-generateKeysUrl="{{generateKeysUrl}}" data-loadKeysUrl="{{loadKeysUrl}}"></script>
+</body>
+</html>
