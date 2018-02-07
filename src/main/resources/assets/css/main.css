@@ -1,3 +1,16 @@
-textarea,input {
-    font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+textarea, input {
+    font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+}
+
+.header-title {
+    color: #ffffff;
+}
+
+.header-logo {
+    width: 32px;
+    height: 32px;
+}
+
+section.hero div.hero-head nav div.navbar-brand {
+    align-items: center;
 }
