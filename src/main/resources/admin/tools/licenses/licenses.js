@@ -17,13 +17,11 @@ exports.get = function () {
     var t2 = new Date();
     t2.setFullYear(t2.getFullYear() + 1);
 
+    var svcUrl = portalLib.serviceUrl({service: 'Z'}).slice(0, -1);
+
     var params = {
-        baseUri: appBaseUrl + '/',
         assetsUri: appBaseUrl,
-        generateUrl: portalLib.serviceUrl({service: 'generate'}),
-        validateUrl: portalLib.serviceUrl({service: 'validate'}),
-        generateKeysUrl: portalLib.serviceUrl({service: 'generateKeys'}),
-        loadKeysUrl: portalLib.serviceUrl({service: 'loadKeys'}),
+        svcUrl: svcUrl,
         currentUser: user.key || '',
         issueTime: t.toISOString(),
         expiryTime: t2.toISOString()
