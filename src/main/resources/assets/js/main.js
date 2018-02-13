@@ -8,27 +8,39 @@
     const saveAppUrl = svcUrl + 'saveApp';
     const getAppsUrl = svcUrl + 'getApps';
     const generateNameUrl = svcUrl + 'generateName';
+    const createLicenseUrl = svcUrl + 'createLicense';
 
     const $generateButton = $('.js-generate-btn');
     const $validateButton = $('.js-validate-btn');
     const $generateKeyPairButton = $('.js-generate-key-btn');
 
-    const $newAppButton = $('.js-new-app');
-    const $cancelAppButton = $('.js-app-cancel');
-    const $saveAppButton = $('.js-app-save');
-    const $appNameInput = $('.js-app-name');
-    const $appDisplayNameInput = $('.js-app-displayName');
-    const $appErrorExistsLabel = $('.js-app-error-exists');
+    const $newAppButton = $('#newAppBtn');
+    const $cancelAppButton = $('#newAppCancelBtn');
+    const $saveAppButton = $('#newAppSaveBtn');
+    const $appNameInput = $('#newAppName');
+    const $appDisplayNameInput = $('#newAppDisplayName');
+    const $appErrorExistsLabel = $('#appErrorExists');
     const $appList = $('#appList');
     const $editAppPanel = $('#editAppPanel');
     const $editAppTitle = $('#editAppTitle');
     const $editAppPrivKey = $('#editAppPrivKey');
     const $editAppPubKey = $('#editAppPubKey');
     const $editAppNotes = $('#editAppNotes');
-    const $editNewLicenseBut = $('#editNewLicenseBut');
-    const $editSaveBut = $('#editSaveBut');
+    const $editNewLicenseBut = $('#editNewLicenseBtn');
+    const $editSaveBtn = $('#editSaveBtn');
+    const $createLicenseBtn = $('#createLicenseBtn');
+    const $cancelNewLicenseBtn = $('#newLicCancelBtn');
 
     const $breadcrumb = $('#breadcrumb');
+    const $licIssuedBy = $('#licIssuedBy');
+    const $licIssuedTo = $('#licIssuedTo');
+    const $licIssueTime = $('#licIssueTime');
+    const $licExpirationTime = $('#licExpirationTime');
+    const $viewLicensePanel = $('#viewLicensePanel');
+    const $viewLicenseIssuedBy = $('#viewLicenseIssuedBy');
+    const $viewLicenseIssuedTo = $('#viewLicenseIssuedTo');
+    const $viewLicenseIssueDate = $('#viewLicenseIssueDate');
+    const $viewLicenseExpiration = $('#viewLicenseExpiration');
 
     const $issuedByInput = $('.js-license-issuedBy');
     const $issuedToInput = $('.js-license-issuedTo');
@@ -58,15 +70,33 @@
 
         $newAppButton.on('click', newApplication);
         $cancelAppButton.on('click', closeModals);
+        $cancelNewLicenseBtn.on('click', closeModals);
         $saveAppButton.on('click', saveApplication);
-        $editSaveBut.on('click', saveEditedApplication);
-        //$editNewLicenseBut.on('click', newLicense);
+        $editSaveBtn.on('click', saveEditedApplication);
+        $editNewLicenseBut.on('click', newLicense);
+        $createLicenseBtn.on('click', createLicense);
 
         $('.modal .delete').on('click', closeModals);
         $('.modal').find('.modal-background').on('click', closeModals);
         var autoGenerateName = debounce(() => generateName($appDisplayNameInput.val()), 800);
         $appDisplayNameInput.on('keyup', autoGenerateName);
-
+        $licIssueTime.datepicker({
+            autoHide: true,
+            format: 'yyyy-mm-dd',
+            weekStart: 1,
+            date: new Date()
+        });
+        $licExpirationTime.datepicker({
+            autoHide: true,
+            format: 'yyyy-mm-dd',
+            weekStart: 1,
+            date: new Date()
+        });
+        $(document).keyup(function (e) {
+            if (e.keyCode === 27) {
+                closeModals();
+            }
+        });
         updateBreadcrumb();
         loadApps();
     });
@@ -224,10 +254,25 @@
             $appRow.append($appIcon).append(document.createTextNode(' ' + app.displayName));
             $appRow.on('click', {app: app}, onAppRowClick);
             $appRows.push($appRow);
+
+            showLicenses(app, $appRows);
         }
 
         $appList.find('a.panel-block').remove();
         $appList.append($appRows);
+    }
+
+    function showLicenses(app, $appRows) {
+        for (let i = 0, l = app.licenses.length; i < l; i++) {
+            let license = app.licenses[i];
+            let $licRow = $('<a class="panel-block is-active panel-level3"></a>');
+            let $licIcon = $('<span class="panel-icon"></span>');
+            let $licI = $('<i class="fas fa-key"></i>');
+            $licIcon.append($licI);
+            $licRow.append($licIcon).append(document.createTextNode(' ' + license.issuedTo));
+            $licRow.on('click', {app: app, license: license}, onLicenseRowClick);
+            $appRows.push($licRow);
+        }
     }
 
     function onAppRowClick(e) {
@@ -241,21 +286,85 @@
         $editAppPubKey.val(app.publicKey);
         $editAppNotes.val(app.notes);
         $editAppPanel.show();
+        $viewLicensePanel.hide();
 
         updateBreadcrumb(app.displayName);
     }
 
+    function onLicenseRowClick(e) {
+        e.preventDefault();
+        let app = e.data.app;
+        let license = e.data.license;
+        console.log(app, license);
+
+        $viewLicenseIssuedBy.val(license.issuedBy);
+        $viewLicenseIssuedTo.val(license.issuedTo);
+        $viewLicenseIssueDate.val(license.issueTime);
+        $viewLicenseExpiration.val(license.expiryTime);
+
+        $viewLicensePanel.show();
+        $editAppPanel.hide();
+
+        updateBreadcrumb(app.displayName, license.issuedTo);
+    }
+
     function newApplication(e) {
         e.preventDefault();
-        console.log('New application');
 
-        showModal('.js-app-modal');
+        showModal('#newAppModal');
         $appNameInput.removeClass('is-danger');
         $appDisplayNameInput.removeClass('is-danger');
         $appErrorExistsLabel.addClass('is-invisible');
         $appNameInput.val('');
         $appDisplayNameInput.val('');
         $appDisplayNameInput.focus();
+    }
+
+    function newLicense(e) {
+        e.preventDefault();
+
+        showModal('#newLicenseModal');
+        // $appNameInput.removeClass('is-danger');
+        // $appDisplayNameInput.removeClass('is-danger');
+        // $appErrorExistsLabel.addClass('is-invisible');
+
+        $licIssuedBy.val('');
+        $licIssuedTo.val('');
+        $licIssueTime.val('');
+        $licExpirationTime.val('');
+        $licIssuedBy.focus();
+    }
+
+    function createLicense(e) {
+        e.preventDefault();
+        let issuedBy = $licIssuedBy.val();
+        let issuedTo = $licIssuedTo.val();
+        let issueTime = $licIssueTime.val();
+        let expirationTime = $licExpirationTime.val();
+
+        $createLicenseBtn.prop('disabled', true);
+        $.ajax({
+            url: createLicenseUrl,
+            method: "POST",
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: {
+                id: editAppId,
+                issuedBy: issuedBy,
+                issuedTo: issuedTo,
+                issueTime: issueTime,
+                expirationTime: expirationTime
+            }
+        }).done(resp => {
+            $createLicenseBtn.prop('disabled', false);
+            if (resp.ok) {
+                closeModals();
+                loadApps();
+            }
+
+        }).fail(xhr => {
+            $createLicenseBtn.prop('disabled', false);
+            console.log('Error');
+        });
     }
 
     function saveApplication(e) {
@@ -307,7 +416,7 @@
         e.preventDefault();
         let notes = $editAppNotes.val();
 
-        $editSaveBut.prop('disabled', true);
+        $editSaveBtn.prop('disabled', true);
         $.ajax({
             url: saveAppUrl,
             method: "POST",
@@ -317,18 +426,18 @@
                 notes: notes
             }
         }).done(resp => {
-            $editSaveBut.prop('disabled', false);
+            $editSaveBtn.prop('disabled', false);
             if (resp.ok) {
                 loadApps();
             }
 
         }).fail(xhr => {
-            $editSaveBut.prop('disabled', false);
+            $editSaveBtn.prop('disabled', false);
             console.log('Error');
         });
     }
 
-    function updateBreadcrumb(appName) {
+    function updateBreadcrumb(appName, licenseName) {
         var lis = [];
         var $appsRootIcon = $('<span class="icon is-small"><i class="fas fa-shield-alt" aria-hidden="true"></i></span>');
         var $appsRootText = $('<span>Applications</span>');
@@ -340,11 +449,22 @@
         if (appName) {
             var $appRootText = $('<span/>').text(appName);
             var $appRootA = $('<a href="#" aria-current="page"></a>').append($appRootText);
-            var $appRoot = $('<li class="is-active"/>').append($appRootA);
+            var $appRoot = $('<li/>').append($appRootA).toggleClass('is-active', !licenseName);
             lis.push($appRoot);
         }
-//     <li class="is-active"><a href="#" aria-current="applications"><span class="icon is-small"><i class="fas fa-shield-alt" aria-hidden="true"></i></span><span>Applications</span></a></li>
-// <li><a href="#"><span class="icon is-small"><i class="fas fa-key"></i></span><span>Licenses</span></a></li>
+
+        if (licenseName) {
+            var $licsRootIcon = $('<span class="icon is-small"><i class="fas fa-key" aria-hidden="true"></i></span>');
+            var $licsRootText = $('<span>Licenses</span>');
+            var $licsRootA = $('<a href="#" aria-current="page"></a>').append($licsRootIcon).append($licsRootText);
+            var $licsRoot = $('<li/>').append($licsRootA);
+            lis.push($licsRoot);
+
+            var $licenseRootText = $('<span/>').text(licenseName);
+            var $licenseRootA = $('<a href="#" aria-current="page"></a>').append($licenseRootText);
+            var $licenseRoot = $('<li class="is-active"/>').append($licenseRootA);
+            lis.push($licenseRoot);
+        }
 
         $breadcrumb.empty().append(lis);
     }

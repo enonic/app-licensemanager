@@ -9,6 +9,7 @@
     <link rel="shortcut icon" href="{{assetsUri}}/img/favicon.png">
     <link rel="stylesheet" type="text/css" href="{{assetsUri}}/css/bulma.css">
     <link rel="stylesheet" type="text/css" href="{{assetsUri}}/css/bulmaswatch.min.css">
+    <link rel="stylesheet" type="text/css" href="{{assetsUri}}/css/datepicker.min.css">
     <link rel="stylesheet" type="text/css" href="{{assetsUri}}/css/main.css">
     <script defer src="{{assetsUri}}/js/fontawesome-all.min.js"></script>
 </head>
@@ -62,18 +63,13 @@
                         </p>
                     </div>
                     <div class="panel-block">
-                        <button class="button is-success is-outlined is-fullwidth js-new-app">New Application</button>
+                        <button class="button is-success is-outlined is-fullwidth" id="newAppBtn">New Application</button>
                     </div>
-                    <a class="panel-block is-active"><span class="panel-icon"><i class="fas fa-shield-alt"></i></span>bulma</a>
-                    <a class="panel-block panel-level2"><span class="panel-icon"><i class="fas fa-shield-alt"></i></span>marksheet</a>
-                    <a class="panel-block panel-level3"><span class="panel-icon"><i class="fas fa-shield-alt"></i></span>minireset.css</a>
-                    <a class="panel-block"><span class="panel-icon"><i class="fas fa-book"></i></span>jgthms.github.io</a>
-                    <a class="panel-block"><span class="panel-icon"><i class="fas fa-key"></i></span>daniellowtw/infboard</a>
-                    <a class="panel-block"><span class="panel-icon"><i class="fas fa-key"></i></span>mojs</a>
                 </nav>
             </div>
 
             <div class="column is-two-thirds">
+                <!-- edit app -->
                 <div class="box" id="editAppPanel" style="display: none;">
                     <h5 class="title is-5"><i class="fas fa-shield-alt"></i> <span id="editAppTitle">Application</span></h5>
 
@@ -82,9 +78,12 @@
                             <label class="label">Private Key</label>
                         </div>
                         <div class="field-body">
-                            <div class="field">
+                            <div class="field has-addons">
+                                <p class="control is-expanded">
+                                    <input class="input is-info" type="text" readonly="readonly" id="editAppPrivKey">
+                                </p>
                                 <p class="control">
-                                    <input class="input" type="text" readonly="readonly" id="editAppPrivKey">
+                                    <a class="button is-info"><i class="far fa-copy"></i></a>
                                 </p>
                             </div>
                         </div>
@@ -95,9 +94,12 @@
                             <label class="label">Public Key</label>
                         </div>
                         <div class="field-body">
-                            <div class="field">
+                            <div class="field has-addons">
+                                <p class="control is-expanded">
+                                    <input class="input is-info" type="text" readonly="readonly" id="editAppPubKey">
+                                </p>
                                 <p class="control">
-                                    <input class="input" type="text" readonly="readonly" id="editAppPubKey">
+                                    <a class="button is-info"><i class="far fa-copy"></i></a>
                                 </p>
                             </div>
                         </div>
@@ -118,10 +120,73 @@
                     <br/>
                     <div class="field is-grouped is-grouped-right">
                         <div class="control">
-                            <button class="button is-warning" id="editNewLicenseBut">New License</button>
+                            <button class="button is-warning" id="editNewLicenseBtn">New License</button>
                         </div>
                         <div class="control">
-                            <button class="button is-success" id="editSaveBut">Save Changes</button>
+                            <button class="button is-success" id="editSaveBtn">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- view license -->
+                <div class="box" id="viewLicensePanel" style="display: none;">
+                    <h5 class="title is-5"><i class="fas fa-key"></i> <span id="viewLicenseTitle">License</span></h5>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Issued by</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <input class="input is-info" type="text" readonly="readonly" id="viewLicenseIssuedBy">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Issued to</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <input class="input is-info" type="text" readonly="readonly" id="viewLicenseIssuedTo">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Issue date</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <input class="input is-info" type="text" readonly="readonly" id="viewLicenseIssueDate">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Expiration Date</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <input class="input is-info" type="text" readonly="readonly" id="viewLicenseExpiration">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-grouped is-grouped-right">
+                        <div class="control">
+                            <button class="button is-danger" id="deleteLicenseBtn">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -362,7 +427,7 @@
 </section>
 
 <!-- Application modal -->
-<div class="modal js-app-modal">
+<div class="modal" id="newAppModal">
     <div class="modal-background"></div>
     <div class="modal-card">
         <header class="modal-card-head">
@@ -378,7 +443,7 @@
                     <div class="field-body">
                         <div class="field">
                             <p class="control">
-                                <input class="input js-app-displayName" type="text" placeholder="Display name" value="">
+                                <input class="input" type="text" placeholder="Display name" id="newAppDisplayName">
                             </p>
                         </div>
                     </div>
@@ -391,22 +456,94 @@
                     <div class="field-body">
                         <div class="field">
                             <p class="control">
-                                <input class="input js-app-name" type="text" placeholder="Unique name" value="">
+                                <input class="input" type="text" placeholder="Unique name" id="newAppName">
                             </p>
-                            <p class="help is-invisible is-danger js-app-error-exists">An application with this name already exists.</p>
+                            <p class="help is-invisible is-danger" id="appErrorExists">An application with this name already exists.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
         <footer class="modal-card-foot">
-            <button class="button is-success js-app-save">Save changes</button>
-            <button class="button js-app-cancel">Cancel</button>
+            <button class="button is-success" id="newAppSaveBtn">Save changes</button>
+            <button class="button" id="newAppCancelBtn">Cancel</button>
+        </footer>
+    </div>
+</div>
+
+<!-- License modal -->
+<div class="modal" id="newLicenseModal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">New License</p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <div class="container is-fluid">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Issued by</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <p class="control">
+                                <input class="input" type="text" placeholder="Organization name" id="licIssuedBy">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Issued to</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <p class="control">
+                                <input class="input" type="text" placeholder="Organization name" id="licIssuedTo">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Issue Date</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <p class="control">
+                                <input class="input" type="text" placeholder="YYYY-MM-DD" id="licIssueTime">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Expiration Date</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <p class="control">
+                                <input class="input" type="text" placeholder="YYYY-MM-DD" id="licExpirationTime">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success" id="createLicenseBtn">Create license</button>
+            <button class="button" id="newLicCancelBtn">Cancel</button>
         </footer>
     </div>
 </div>
 
 <script src="{{assetsUri}}/js/jquery-3.3.1.min.js"></script>
+<script src="{{assetsUri}}/js/datepicker.min.js"></script>
 <script src="{{assetsUri}}/js/main.js" data-svcurl="{{svcUrl}}"></script>
 </body>
 </html>

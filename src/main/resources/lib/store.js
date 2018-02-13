@@ -20,13 +20,12 @@ var NODE_PERMISSIONS = [
 
 var TYPE = {
     APPLICATION: 'application',
-    KEY_PAIR: 'keyPair',
     LICENSE: 'license'
 };
 
 /**
  * @typedef {Object} Application
- * @property {string} type Object type: 'league'
+ * @property {string} type Object type: 'application'
  * @property {string} id Application id.
  * @property {string} name Name of the application.
  * @property {string} displayName Display name of the application.
@@ -90,7 +89,6 @@ exports.createApp = function (params) {
     return appNode._id;
 };
 
-
 /**
  * Updates an existing application.
  *
@@ -111,32 +109,73 @@ exports.updateApp = function (params) {
     return appNode._id;
 };
 
-
 /**
  * Retrieve a list of applications.
- * @param  {number} [start=0] First index of the leagues.
- * @param  {number} [count=10] Number of leagues to fetch.
+ * @param  {number} [start=0] First index of the applications.
+ * @param  {number} [count=10] Number of applications to fetch.
  * @return {ApplicationResponse} Applications.
  */
 exports.getApplications = function (start, count) {
     var apps = query({
-        start: start,
-        count: count,
+        start: start || 0,
+        count: count || 20,
         query: "type = '" + TYPE.APPLICATION + "'",
         sort: "name ASC"
     });
-    apps.hits = apps.hits.map(function (app) {
-        return {
-            id: app._id,
-            name: app.name,
-            displayName: app.displayName,
-            privateKey: app.privateKey,
-            publicKey: app.publicKey,
-            notes: app.notes
-        }
-    });
+    apps.hits = apps.hits.map(fetchAppLicenses).map(appFromNode);
 
     return apps;
+};
+
+/**
+ * Retrieve an application by its id.
+ * @param  {string} id Application id.
+ * @return {Application|null} Applications.
+ */
+exports.getApplicationById = function (id) {
+    var repoConn = newConnection();
+    var result = repoConn.get(id);
+    if (!result || result.type !== TYPE.APPLICATION) {
+        return null;
+    }
+
+    return appFromNode(result);
+};
+
+/**
+ * Create a new license.
+ *
+ * @param {object} params JSON with the license parameters.
+ * @param {string} params.appId Application id.
+ * @param {string} params.license License string.
+ * @param {string} params.issuedBy The entity that issued this license.
+ * @param {string} params.issuedTo The entity this license is issued to.
+ * @param {Date} [params.issueTime] Time when the license was issued.
+ * @param {Date} [params.expiryTime] Expiration time for the license.
+ * @return {string} License id.
+ */
+exports.createLicense = function (params) {
+    var repoConn = newConnection();
+
+    var app = repoConn.get(params.appId);
+    if (!app || app.type !== TYPE.APPLICATION) {
+        throw 'Application not found: ' + params.appId;
+    }
+    var name = generateLicenseName(app._path, params.issuedTo);
+
+    var licenseNode = repoConn.create({
+        _parentPath: app._path,
+        _name: name,
+        _permissions: NODE_PERMISSIONS,
+        type: TYPE.LICENSE,
+        issuedBy: params.issuedBy,
+        issuedTo: params.issuedTo,
+        issueTime: params.issueTime,
+        expiryTime: params.expiryTime,
+        license: params.license
+    });
+
+    return licenseNode._id;
 };
 
 exports.appNameInUse = function (name) {
@@ -145,9 +184,67 @@ exports.appNameInUse = function (name) {
     return appWithNameExists(repoConn, name);
 };
 
+var appFromNode = function (node) {
+    return {
+        type: node.type,
+        id: node._id,
+        name: node.name,
+        displayName: node.displayName,
+        privateKey: node.privateKey,
+        publicKey: node.publicKey,
+        notes: node.notes,
+        licenses: node.licenses || []
+    }
+};
+
+var licenseFromNode = function (node) {
+    return {
+        type: node.type,
+        id: node._id,
+        issuedBy: node.issuedBy,
+        issuedTo: node.issuedTo,
+        issueTime: node.issueTime,
+        expiryTime: node.expiryTime,
+        license: node.license
+    }
+};
+
+var fetchAppLicenses = function (appNode) {
+    var licenses = query({
+        start: 0,
+        count: 100,
+        query: "type = '" + TYPE.LICENSE + "' AND _parentPath = '" + appNode._path + "'"
+    });
+    var licenseList = [];
+    var i, l, licenseNode;
+    for (i = 0, l = licenses.hits.length; i < l; i++) {
+        licenseNode = licenses.hits[i];
+        licenseList.push(licenseNode);
+    }
+    appNode.licenses = licenseList.map(licenseFromNode);
+    return appNode;
+};
+
+var generateLicenseName = function (parentPath, sourceName) {
+    // TODO run as admin
+    var repoConn = newConnection();
+
+    var name = exports.prettifyName(sourceName);
+    var i = 1;
+    while (licenseWithNameExists(repoConn, name)) {
+        i += 1;
+        name = exports.prettifyName(sourceName) + '-' + i;
+    }
+    return name;
+};
+
 var appWithNameExists = function (repoConn, name) {
-    //var nodeName = prettifyName(name);
     var query = "type = '" + TYPE.APPLICATION + "' AND name='" + name + "'";
+    return queryExists(query, repoConn)
+};
+
+var licenseWithNameExists = function (repoConn, parentPath, name) {
+    var query = "_parentPath = '" + parentPath + "' AND _name='" + name + "'";
     return queryExists(query, repoConn)
 };
 

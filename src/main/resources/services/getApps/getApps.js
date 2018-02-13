@@ -3,7 +3,7 @@ var storeLib = require('/lib/store');
 exports.get = function (req) {
 
     storeLib.refresh();
-    var apps = storeLib.getApplications(0);
+    var apps = storeLib.getApplications();
 
     return {
         contentType: 'application/json',
