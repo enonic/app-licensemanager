@@ -185,6 +185,23 @@ exports.appNameInUse = function (name) {
 };
 
 /**
+ * Delete an application.
+ *
+ * @param {string} appId Application id.
+ */
+exports.deleteApp = function (appId) {
+    var repoConn = newConnection();
+
+    var licenseNode = repoConn.get(appId);
+    if (!licenseNode || licenseNode.type !== TYPE.APPLICATION) {
+        return;
+    }
+
+    repoConn.delete(appId);
+    repoConn.refresh('SEARCH');
+};
+
+/**
  * Delete a license.
  *
  * @param {string} licenseId License id.

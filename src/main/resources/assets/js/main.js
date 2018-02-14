@@ -6,6 +6,7 @@
     const generateNameUrl = svcUrl + 'generateName';
     const createLicenseUrl = svcUrl + 'createLicense';
     const deleteLicenseUrl = svcUrl + 'deleteLicense';
+    const deleteAppUrl = svcUrl + 'deleteApp';
 
     const $newAppButton = $('#newAppBtn');
     const $cancelAppButton = $('#newAppCancelBtn');
@@ -19,8 +20,11 @@
     const $editAppPrivKey = $('#editAppPrivKey');
     const $editAppPubKey = $('#editAppPubKey');
     const $editAppNotes = $('#editAppNotes');
-    const $editNewLicenseBut = $('#editNewLicenseBtn');
+    const $editNewLicenseBtn = $('#editNewLicenseBtn');
     const $editSaveBtn = $('#editSaveBtn');
+    const $deleteAppBtn = $('#deleteAppBtn');
+    const $confirmDeleteApplicationBtn = $('#confirmDeleteApplicationBtn');
+    const $cancelDeleteApplicationBtn = $('#cancelDeleteApplicationBtn');
     const $createLicenseBtn = $('#createLicenseBtn');
     const $cancelNewLicenseBtn = $('#newLicCancelBtn');
 
@@ -53,11 +57,14 @@
         $cancelNewLicenseBtn.on('click', closeModals);
         $saveAppButton.on('click', saveApplication);
         $editSaveBtn.on('click', saveEditedApplication);
-        $editNewLicenseBut.on('click', newLicense);
+        $deleteAppBtn.on('click', deleteAppConfirm);
+        $confirmDeleteApplicationBtn.on('click', deleteApp);
+        $editNewLicenseBtn.on('click', newLicense);
         $createLicenseBtn.on('click', createLicense);
         $deleteLicenseBtn.on('click', deleteLicenseConfirm);
         $confirmDeleteLicenseBtn.on('click', deleteLicense);
         $cancelDeleteLicenseBtn.on('click', closeModals);
+        $cancelDeleteApplicationBtn.on('click', closeModals);
 
         $('.modal .delete').on('click', closeModals);
         $('.modal').find('.modal-background').on('click', closeModals);
@@ -345,6 +352,34 @@
 
         }).fail(xhr => {
             $confirmDeleteLicenseBtn.prop('disabled', false);
+            console.log('Error');
+        });
+    }
+
+   function deleteAppConfirm(e) {
+        showModal('#deleteApplicationModal');
+    }
+
+    function deleteApp(e) {
+        e.preventDefault();
+        $confirmDeleteApplicationBtn.prop('disabled', true);
+        $.ajax({
+            url: deleteAppUrl,
+            method: "POST",
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: {
+                id: g_editAppId
+            }
+        }).done(resp => {
+            $confirmDeleteApplicationBtn.prop('disabled', false);
+            showNotification('The application has been deleted.');
+            closeModals();
+            loadApps();
+            $editAppPanel.hide();
+            g_editAppId = null;
+
+        }).fail(xhr => {
+            $confirmDeleteApplicationBtn.prop('disabled', false);
             console.log('Error');
         });
     }

@@ -40,3 +40,7 @@ div.modal-card section div.field-body {
     right: 0.5rem;
     top: 0.5rem;
 }
+
+div.modal-card > footer {
+    justify-content: flex-end;
+}
