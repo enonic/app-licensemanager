@@ -28,7 +28,6 @@ exports.post = function (req) {
         expiryTime: expirationTime,
         properties: properties
     });
-    log.info(license);
 
     var licenseId = storeLib.createLicense({
         appId: id,

@@ -90,7 +90,7 @@
                                     <input class="input" type="text" readonly="readonly" id="editAppPrivKey">
                                 </p>
                                 <p class="control">
-                                    <a class="button is-info" title="Copy to clipboard"><i class="far fa-copy"></i></a>
+                                    <a class="button is-info" title="Copy to clipboard" id="copyPrivateKeyBtn" data-clipboard-target="#editAppPrivKey"><i class="far fa-copy"></i></a>
                                 </p>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                                     <input class="input" type="text" readonly="readonly" id="editAppPubKey">
                                 </p>
                                 <p class="control">
-                                    <a class="button is-info" title="Copy to clipboard"><i class="far fa-copy"></i></a>
+                                    <a class="button is-info" title="Copy to clipboard" id="copyPublicKeyBtn" data-clipboard-target="#editAppPubKey"><i class="far fa-copy"></i></a>
                                 </p>
                             </div>
                         </div>
@@ -377,6 +377,7 @@
 </div>
 
 <script src="{{assetsUri}}/js/jquery-3.3.1.min.js"></script>
+<script src="{{assetsUri}}/js/clipboard.min.js"></script>
 <script src="{{assetsUri}}/js/datepicker.min.js"></script>
 <script src="{{assetsUri}}/js/main.js" data-svcurl="{{svcUrl}}"></script>
 </body>

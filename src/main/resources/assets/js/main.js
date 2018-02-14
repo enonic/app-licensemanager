@@ -27,6 +27,8 @@
     const $cancelDeleteApplicationBtn = $('#cancelDeleteApplicationBtn');
     const $createLicenseBtn = $('#createLicenseBtn');
     const $cancelNewLicenseBtn = $('#newLicCancelBtn');
+    const $copyPrivateKeyBtn = $('#copyPrivateKeyBtn');
+    const $copyPublicKeyBtn = $('#copyPublicKeyBtn');
 
     const $breadcrumb = $('#breadcrumb');
     const $licIssuedBy = $('#licIssuedBy');
@@ -47,6 +49,8 @@
     const $notificationPanel = $('#notificationPanel');
     const $notificationMessage = $('#notificationMessage');
 
+    const GenericErrorMessage = 'Oops! Something went wrong!';
+
     let g_editAppId = null;
     let g_selectedLicense = null;
     let g_notificationTimer = null;
@@ -65,6 +69,10 @@
         $confirmDeleteLicenseBtn.on('click', deleteLicense);
         $cancelDeleteLicenseBtn.on('click', closeModals);
         $cancelDeleteApplicationBtn.on('click', closeModals);
+        $copyPrivateKeyBtn.on('click', copyPrivateKeyClipboard);
+        $copyPublicKeyBtn.on('click', copyPublicKeyClipboard);
+
+        new Clipboard('#copyPrivateKeyBtn,#copyPublicKeyBtn');
 
         $('.modal .delete').on('click', closeModals);
         $('.modal').find('.modal-background').on('click', closeModals);
@@ -101,12 +109,11 @@
             showApps(resp.apps);
 
         }).fail(xhr => {
-            console.log('Error');
+            showNotificationError(GenericErrorMessage);
         });
     }
 
     function showApps(apps) {
-        console.log(apps);
         let $appRows = [];
         for (let i = 0, l = apps.hits.length; i < l; i++) {
             let app = apps.hits[i];
@@ -140,7 +147,6 @@
 
     function onAppRowClick(e) {
         e.preventDefault();
-        console.log(e.data.app);
         let app = e.data.app;
         g_editAppId = app.id;
 
@@ -253,7 +259,7 @@
 
         }).fail(xhr => {
             $createLicenseBtn.prop('disabled', false);
-            console.log('Error');
+            showNotificationError(GenericErrorMessage);
         });
     }
 
@@ -299,7 +305,7 @@
 
         }).fail(xhr => {
             $saveAppButton.prop('disabled', false);
-            console.log('Error');
+            showNotificationError(GenericErrorMessage);
         });
     }
 
@@ -325,7 +331,7 @@
 
         }).fail(xhr => {
             $editSaveBtn.prop('disabled', false);
-            console.log('Error');
+            showNotificationError(GenericErrorMessage);
         });
     }
 
@@ -352,11 +358,11 @@
 
         }).fail(xhr => {
             $confirmDeleteLicenseBtn.prop('disabled', false);
-            console.log('Error');
+            showNotificationError(GenericErrorMessage);
         });
     }
 
-   function deleteAppConfirm(e) {
+    function deleteAppConfirm(e) {
         showModal('#deleteApplicationModal');
     }
 
@@ -380,8 +386,18 @@
 
         }).fail(xhr => {
             $confirmDeleteApplicationBtn.prop('disabled', false);
-            console.log('Error');
+            showNotificationError(GenericErrorMessage);
         });
+    }
+
+    function copyPrivateKeyClipboard(e) {
+        e.preventDefault();
+        showNotificationWarning('Private key copied to clipboard.');
+    }
+
+    function copyPublicKeyClipboard(e) {
+        e.preventDefault();
+        showNotificationWarning('Public key copied to clipboard.');
     }
 
     function updateBreadcrumb(appName, licenseName) {
@@ -428,13 +444,25 @@
             }
 
         }).fail(xhr => {
-            console.log('Error');
+            showNotificationError(GenericErrorMessage);
         });
     }
 
-    function showNotification(message) {
+    function showNotificationWarning(message) {
+        showNotification(message, 'warning');
+    }
+
+    function showNotificationError(message) {
+        showNotification(message, 'error');
+    }
+
+    function showNotification(message, type) {
+        var isWarning = type === 'warning';
+        var isError = type === 'error';
+        var isInfo = !isWarning && !isError;
         $notificationMessage.text(message);
         $notificationPanel.show();
+        $notificationPanel.toggleClass('is-info', isInfo).toggleClass('is-warning', isWarning).toggleClass('is-danger', isError);
         clearTimeout(g_notificationTimer);
         g_notificationTimer = setTimeout(() => $notificationPanel.fadeOut('slow'), 3000);
     }
