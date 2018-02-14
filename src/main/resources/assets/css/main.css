@@ -26,3 +26,17 @@ section.hero div.hero-head nav div.navbar-brand {
 div.modal-card section div.field-body {
     flex-grow: 3;
 }
+
+.notification.license-feedback {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    opacity: 0.9;
+    text-align: center;
+    display: none;
+}
+
+.notification.license-feedback > .delete {
+    right: 0.5rem;
+    top: 0.5rem;
+}

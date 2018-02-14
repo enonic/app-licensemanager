@@ -46,6 +46,10 @@
             </div>
         </nav>
     </div>
+    <div class="notification is-info license-feedback" id="notificationPanel">
+        <button class="delete"></button>
+        <span id="notificationMessage">Primar lorem ipsum dolor sit amet, consectetur</span>
+    </div>
 </section>
 
 <br/>
@@ -72,6 +76,9 @@
                 <!-- edit app -->
                 <div class="box" id="editAppPanel" style="display: none;">
                     <h5 class="title is-5"><i class="fas fa-shield-alt"></i> <span id="editAppTitle">Application</span></h5>
+                    <div class="level">
+                        <h2 class="level-item has-text-centered">Application</h2>
+                    </div>
 
                     <div class="field is-horizontal">
                         <div class="field-label is-normal">
@@ -83,7 +90,7 @@
                                     <input class="input is-info" type="text" readonly="readonly" id="editAppPrivKey">
                                 </p>
                                 <p class="control">
-                                    <a class="button is-info"><i class="far fa-copy"></i></a>
+                                    <a class="button is-info" title="Copy to clipboard"><i class="far fa-copy"></i></a>
                                 </p>
                             </div>
                         </div>
@@ -99,7 +106,7 @@
                                     <input class="input is-info" type="text" readonly="readonly" id="editAppPubKey">
                                 </p>
                                 <p class="control">
-                                    <a class="button is-info"><i class="far fa-copy"></i></a>
+                                    <a class="button is-info" title="Copy to clipboard"><i class="far fa-copy"></i></a>
                                 </p>
                             </div>
                         </div>
@@ -112,7 +119,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <p class="control">
-                                    <textarea class="textarea" rows="6" id="editAppNotes"></textarea>
+                                    <textarea class="textarea is-info" rows="6" id="editAppNotes"></textarea>
                                 </p>
                             </div>
                         </div>
@@ -131,7 +138,9 @@
                 <!-- view license -->
                 <div class="box" id="viewLicensePanel" style="display: none;">
                     <h5 class="title is-5"><i class="fas fa-key"></i> <span id="viewLicenseTitle">License</span></h5>
-
+                    <div class="level">
+                        <h3 class="level-item has-text-centered">License</h3>
+                    </div>
                     <div class="field is-horizontal">
                         <div class="field-label is-normal">
                             <label class="label">Issued by</label>
@@ -139,7 +148,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <p class="control">
-                                    <input class="input is-info" type="text" readonly="readonly" id="viewLicenseIssuedBy">
+                                    <input class="input" type="text" readonly="readonly" id="viewLicenseIssuedBy">
                                 </p>
                             </div>
                         </div>
@@ -152,7 +161,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <p class="control">
-                                    <input class="input is-info" type="text" readonly="readonly" id="viewLicenseIssuedTo">
+                                    <input class="input" type="text" readonly="readonly" id="viewLicenseIssuedTo">
                                 </p>
                             </div>
                         </div>
@@ -165,7 +174,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <p class="control">
-                                    <input class="input is-info" type="text" readonly="readonly" id="viewLicenseIssueDate">
+                                    <input class="input" type="text" readonly="readonly" id="viewLicenseIssueDate">
                                 </p>
                             </div>
                         </div>
@@ -178,7 +187,20 @@
                         <div class="field-body">
                             <div class="field">
                                 <p class="control">
-                                    <input class="input is-info" type="text" readonly="readonly" id="viewLicenseExpiration">
+                                    <input class="input" type="text" readonly="readonly" id="viewLicenseExpiration">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="field-label is-normal">
+                            <label class="label">License</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <textarea class="textarea" rows="8" readonly="readonly" id="viewLicenseText"></textarea>
                                 </p>
                             </div>
                         </div>
@@ -193,237 +215,6 @@
             </div>
         </div>
     </div>
-</section>
-
-<section style="display: none;">
-    <div class="container has-text-centered">
-        <div class="columns">
-
-            <div class="column is-four-quarters box">
-
-                <!-- Key Pair -->
-                <div class="container is-fluid">
-                    <h5 class="title is-5">Key Pair</h5>
-
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Key Pair</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <textarea class="textarea js-keypair" rows="6"></textarea>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Private Key</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <input class="input js-privatekey" type="text">
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Public Key</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <input class="input js-publickey" type="text">
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field is-grouped">
-                        <div class="control is-success">
-                            <button class="button is-warning js-generate-key-btn">Generate Key Pair</button>
-                        </div>
-                    </div>
-                </div>
-
-                <hr/>
-
-                <!-- License -->
-                <div class="container is-fluid">
-                    <h5 class="title is-5">License Details</h5>
-
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Issued By</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <input class="input js-license-issuedBy" type="text" placeholder="Issued to" value="">
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Issued To</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <input class="input js-license-issuedTo" type="text" placeholder="Issued by" value="">
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Issue Time</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <input class="input js-license-issued" type="text" placeholder="Date time" value="{{issueTime}}">
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Expiration Time</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <input class="input js-license-expiry" type="text" placeholder="Date time" value="{{expiryTime}}">
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field is-horizontal">
-                        <div class="columns">
-                            <div class="column is-8 is-offset-5">
-                                <div class="field has-addons">
-                                    <p class="control">
-                                        <input class="input js-license-key1" type="text" placeholder="Custom param key">
-                                    </p>
-                                    <p class="control">
-                                        <a class="button is-static">Key</a>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="column is-8">
-                                <div class="field has-addons">
-                                    <p class="control">
-                                        <input class="input js-license-value1" type="text" placeholder="Custom param value">
-                                    </p>
-                                    <p class="control">
-                                        <a class="button is-static">Value</a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="field is-horizontal">
-                        <div class="columns">
-                            <div class="column is-8 is-offset-5">
-                                <div class="field has-addons">
-                                    <p class="control">
-                                        <input class="input js-license-key2" type="text" placeholder="Custom param key">
-                                    </p>
-                                    <p class="control">
-                                        <a class="button is-static">Key</a>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="column is-8">
-                                <div class="field has-addons">
-                                    <p class="control">
-                                        <input class="input js-license-value2" type="text" placeholder="Custom param value">
-                                    </p>
-                                    <p class="control">
-                                        <a class="button is-static">Value</a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="field is-horizontal">
-                        <div class="columns">
-                            <div class="column is-8 is-offset-5">
-                                <div class="field has-addons">
-                                    <p class="control">
-                                        <input class="input js-license-key3" type="text" placeholder="Custom param key">
-                                    </p>
-                                    <p class="control">
-                                        <a class="button is-static">Key</a>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="column is-8">
-                                <div class="field has-addons">
-                                    <p class="control">
-                                        <input class="input js-license-value3" type="text" placeholder="Custom param value">
-                                    </p>
-                                    <p class="control">
-                                        <a class="button is-static">Value</a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field is-grouped">
-                        <div class="control is-success">
-                            <button class="button is-info js-generate-btn">Generate License</button>
-                        </div>
-                    </div>
-                </div>
-
-                <hr/>
-
-                <!-- Generated License -->
-                <div class="container is-fluid js-generated-license">
-                    <h5 class="title is-5">Generated License</h5>
-
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">License</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <textarea class="textarea js-license" rows="10"></textarea>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field is-grouped">
-                        <div class="control is-success">
-                            <button class="button is-info js-validate-btn">Validate License</button>
-                        </div>
-                        <div class="column is-4 is-offset-2">
-                            <span class="tag is-success js-valid-license" style="display: none">License is Valid</span>
-                            <span class="tag is-danger js-invalid-license" style="display: none">License is Invalid</span>
-                            <span class="tag is-warning js-expired-license" style="display: none">License has Expired</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <div style="height: 50px;"></div>
 </section>
 
 <!-- Application modal -->
@@ -538,6 +329,26 @@
         <footer class="modal-card-foot">
             <button class="button is-success" id="createLicenseBtn">Create license</button>
             <button class="button" id="newLicCancelBtn">Cancel</button>
+        </footer>
+    </div>
+</div>
+
+<!-- Delete license modal -->
+<div class="modal" id="deleteLicenseModal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Delete License</p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <div class="container is-fluid">
+                <p>Are you sure you want to delete this license?</p>
+            </div>
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-danger" id="confirmDeleteLicenseBtn">Delete</button>
+            <button class="button" id="cancelDeleteLicenseBtn">Cancel</button>
         </footer>
     </div>
 </div>

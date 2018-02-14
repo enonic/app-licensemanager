@@ -1,18 +1,11 @@
 'use strict';
 ($ => {
     const svcUrl = document.currentScript.getAttribute('data-svcurl');
-    const generateUrl = svcUrl + 'generate';
-    const validateUrl = svcUrl + 'validate';
-    const generateKeysUrl = svcUrl + 'generateKeys';
-    const loadKeysUrl = svcUrl + 'loadKeys';
     const saveAppUrl = svcUrl + 'saveApp';
     const getAppsUrl = svcUrl + 'getApps';
     const generateNameUrl = svcUrl + 'generateName';
     const createLicenseUrl = svcUrl + 'createLicense';
-
-    const $generateButton = $('.js-generate-btn');
-    const $validateButton = $('.js-validate-btn');
-    const $generateKeyPairButton = $('.js-generate-key-btn');
+    const deleteLicenseUrl = svcUrl + 'deleteLicense';
 
     const $newAppButton = $('#newAppBtn');
     const $cancelAppButton = $('#newAppCancelBtn');
@@ -41,33 +34,20 @@
     const $viewLicenseIssuedTo = $('#viewLicenseIssuedTo');
     const $viewLicenseIssueDate = $('#viewLicenseIssueDate');
     const $viewLicenseExpiration = $('#viewLicenseExpiration');
+    const $viewLicenseText = $('#viewLicenseText');
+    const $viewLicenseTitle = $('#viewLicenseTitle');
+    const $deleteLicenseBtn = $('#deleteLicenseBtn');
+    const $cancelDeleteLicenseBtn = $('#cancelDeleteLicenseBtn');
+    const $confirmDeleteLicenseBtn = $('#confirmDeleteLicenseBtn');
 
-    const $issuedByInput = $('.js-license-issuedBy');
-    const $issuedToInput = $('.js-license-issuedTo');
-    const $issuedInput = $('.js-license-issued');
-    const $expiryInput = $('.js-license-expiry');
-    const $value1Input = $('.js-license-value1');
-    const $value2Input = $('.js-license-value2');
-    const $value3Input = $('.js-license-value3');
-    const $key1Input = $('.js-license-key1');
-    const $key2Input = $('.js-license-key2');
-    const $key3Input = $('.js-license-key3');
-    const $validLicenseLabel = $('.js-valid-license');
-    const $invalidLicenseLabel = $('.js-invalid-license');
-    const $expiredLicenseLabel = $('.js-expired-license');
-    const $licenseInput = $('.js-license');
-    const $keyPairInput = $('.js-keypair');
-    const $publicKeyInput = $('.js-publickey');
-    const $privateKeyInput = $('.js-privatekey');
+    const $notificationPanel = $('#notificationPanel');
+    const $notificationMessage = $('#notificationMessage');
 
-    let editAppId = null;
+    let g_editAppId = null;
+    let g_selectedLicense = null;
+    let g_notificationTimer = null;
 
     $(() => {
-        $generateButton.on('click', generateRequest);
-        $validateButton.on('click', validateRequest);
-        $generateKeyPairButton.on('click', generateKeysRequest);
-        $keyPairInput.on('keyup', loadKeysRequest);
-
         $newAppButton.on('click', newApplication);
         $cancelAppButton.on('click', closeModals);
         $cancelNewLicenseBtn.on('click', closeModals);
@@ -75,10 +55,13 @@
         $editSaveBtn.on('click', saveEditedApplication);
         $editNewLicenseBut.on('click', newLicense);
         $createLicenseBtn.on('click', createLicense);
+        $deleteLicenseBtn.on('click', deleteLicenseConfirm);
+        $confirmDeleteLicenseBtn.on('click', deleteLicense);
+        $cancelDeleteLicenseBtn.on('click', closeModals);
 
         $('.modal .delete').on('click', closeModals);
         $('.modal').find('.modal-background').on('click', closeModals);
-        var autoGenerateName = debounce(() => generateName($appDisplayNameInput.val()), 800);
+        var autoGenerateName = debounce(() => generateName($appDisplayNameInput.val()), 600);
         $appDisplayNameInput.on('keyup', autoGenerateName);
         $licIssueTime.datepicker({
             autoHide: true,
@@ -101,135 +84,8 @@
         loadApps();
     });
 
-    function generateRequest() {
-        const issuedBy = $issuedByInput.val();
-        const issuedTo = $issuedToInput.val();
-        const issued = $issuedInput.val();
-        const expiry = $expiryInput.val();
-        const keyPair = $keyPairInput.val();
-        const privateKey = $privateKeyInput.val();
-        const publicKey = $publicKeyInput.val();
-        const value1 = $value1Input.val();
-        const value2 = $value2Input.val();
-        const value3 = $value3Input.val();
-        const key1 = $key1Input.val();
-        const key2 = $key2Input.val();
-        const key3 = $key3Input.val();
-
-        $generateButton.prop('disabled', true);
-        $.ajax({
-            url: generateUrl,
-            method: "POST",
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: {
-                issuedBy: issuedBy,
-                issuedTo: issuedTo,
-                issued: issued,
-                expiry: expiry,
-                keyPair: keyPair,
-                privateKey: privateKey,
-                publicKey: publicKey,
-                key1: key1,
-                key2: key2,
-                key3: key3,
-                value1: value1,
-                value2: value2,
-                value3: value3
-            }
-        }).done(resp => {
-            $licenseInput.val(resp.license);
-            $generateButton.prop('disabled', false);
-
-        }).fail(xhr => {
-            $generateButton.prop('disabled', false);
-            console.log('Error');
-        });
-    }
-
-    function validateRequest() {
-        const encodedLicense = $licenseInput.val();
-        const keyPair = $keyPairInput.val();
-        const publicKey = $publicKeyInput.val();
-
-        $validateButton.prop('disabled', true);
-        $validLicenseLabel.hide();
-        $invalidLicenseLabel.hide();
-        $expiredLicenseLabel.hide();
-
-        $.ajax({
-            url: validateUrl,
-            method: "POST",
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: {
-                license: encodedLicense,
-                keyPair: keyPair,
-                publicKey: publicKey
-            }
-        }).done(resp => {
-            if (resp.isValid) {
-                $issuedByInput.val(resp.license.issuedBy);
-                $issuedToInput.val(resp.license.issuedTo);
-                $issuedInput.val(resp.license.issueTime);
-                $expiryInput.val(resp.license.expiryTime);
-                $validLicenseLabel.toggle(!resp.expired);
-                $expiredLicenseLabel.toggle(resp.expired);
-                $invalidLicenseLabel.hide();
-            } else {
-                $validLicenseLabel.hide();
-                $invalidLicenseLabel.show();
-                $expiredLicenseLabel.hide();
-            }
-            $validateButton.prop('disabled', false);
-
-        }).fail(xhr => {
-            $validateButton.prop('disabled', false);
-            console.log('Error');
-        });
-    }
-
-    function generateKeysRequest() {
-        $generateKeyPairButton.prop('disabled', true);
-        $.ajax({
-            url: generateKeysUrl,
-            method: "POST",
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: {}
-        }).done(resp => {
-            $publicKeyInput.val(resp.publicKey);
-            $privateKeyInput.val(resp.privateKey);
-            $keyPairInput.val(resp.keyPair);
-            $generateKeyPairButton.prop('disabled', false);
-
-        }).fail(xhr => {
-            $generateKeyPairButton.prop('disabled', false);
-            console.log('Error');
-        });
-    }
-
-    function loadKeysRequest() {
-        $.ajax({
-            url: loadKeysUrl,
-            method: "POST",
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: {
-                keyPair: $keyPairInput.val()
-            }
-        }).done(resp => {
-            if (resp.publicKey) {
-                $publicKeyInput.val(resp.publicKey);
-            }
-            if (resp.privateKey) {
-                $privateKeyInput.val(resp.privateKey);
-            }
-
-        }).fail(xhr => {
-            console.log('Error');
-        });
-    }
-
-    // ----
     function loadApps() {
-        $.ajax({
+        return $.ajax({
             url: getAppsUrl,
             method: "GET",
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -265,7 +121,7 @@
     function showLicenses(app, $appRows) {
         for (let i = 0, l = app.licenses.length; i < l; i++) {
             let license = app.licenses[i];
-            let $licRow = $('<a class="panel-block is-active panel-level3"></a>');
+            let $licRow = $('<a class="panel-block is-active panel-level2"></a>');
             let $licIcon = $('<span class="panel-icon"></span>');
             let $licI = $('<i class="fas fa-key"></i>');
             $licIcon.append($licI);
@@ -279,7 +135,7 @@
         e.preventDefault();
         console.log(e.data.app);
         let app = e.data.app;
-        editAppId = app.id;
+        g_editAppId = app.id;
 
         $editAppTitle.text(app.displayName);
         $editAppPrivKey.val(app.privateKey);
@@ -288,6 +144,8 @@
         $editAppPanel.show();
         $viewLicensePanel.hide();
 
+        $editAppNotes.focus();
+
         updateBreadcrumb(app.displayName);
     }
 
@@ -295,12 +153,19 @@
         e.preventDefault();
         let app = e.data.app;
         let license = e.data.license;
-        console.log(app, license);
+        showLicense(app, license);
+    }
 
+    function showLicense(app, license) {
+        g_editAppId = app.id;
+        g_selectedLicense = license;
+
+        $viewLicenseTitle.text(app.displayName);
         $viewLicenseIssuedBy.val(license.issuedBy);
         $viewLicenseIssuedTo.val(license.issuedTo);
         $viewLicenseIssueDate.val(license.issueTime);
         $viewLicenseExpiration.val(license.expiryTime);
+        $viewLicenseText.val(license.license);
 
         $viewLicensePanel.show();
         $editAppPanel.hide();
@@ -348,7 +213,7 @@
             method: "POST",
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
             data: {
-                id: editAppId,
+                id: g_editAppId,
                 issuedBy: issuedBy,
                 issuedTo: issuedTo,
                 issueTime: issueTime,
@@ -358,7 +223,25 @@
             $createLicenseBtn.prop('disabled', false);
             if (resp.ok) {
                 closeModals();
-                loadApps();
+                showNotification('License created.');
+
+                let licId = resp.license;
+                loadApps().then((resp) => {
+                    let apps = resp.apps;
+
+                    licenseLookup:
+                        for (let a = 0; a < apps.hits.length; a++) {
+                            let app = apps.hits[a];
+                            for (let l = 0; l < app.licenses.length; l++) {
+                                let license = app.licenses[l];
+                                if (license.id === licId) {
+                                    showLicense(app, license);
+                                    break licenseLookup;
+                                }
+                            }
+                        }
+                });
+
             }
 
         }).fail(xhr => {
@@ -401,6 +284,7 @@
             if (resp.ok) {
                 closeModals();
                 loadApps();
+                showNotification('Application created.');
             } else {
                 $appNameInput.addClass('is-danger');
                 $appErrorExistsLabel.removeClass('is-invisible');
@@ -422,17 +306,45 @@
             method: "POST",
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
             data: {
-                id: editAppId,
+                id: g_editAppId,
                 notes: notes
             }
         }).done(resp => {
             $editSaveBtn.prop('disabled', false);
             if (resp.ok) {
+                showNotification('Application changes saved.');
                 loadApps();
             }
 
         }).fail(xhr => {
             $editSaveBtn.prop('disabled', false);
+            console.log('Error');
+        });
+    }
+
+    function deleteLicenseConfirm(e) {
+        showModal('#deleteLicenseModal');
+    }
+
+    function deleteLicense(e) {
+        e.preventDefault();
+        $confirmDeleteLicenseBtn.prop('disabled', true);
+        $.ajax({
+            url: deleteLicenseUrl,
+            method: "POST",
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: {
+                id: g_selectedLicense.id
+            }
+        }).done(resp => {
+            $confirmDeleteLicenseBtn.prop('disabled', false);
+            showNotification('The license has been deleted.');
+            closeModals();
+            loadApps();
+            $viewLicensePanel.hide();
+
+        }).fail(xhr => {
+            $confirmDeleteLicenseBtn.prop('disabled', false);
             console.log('Error');
         });
     }
@@ -483,6 +395,13 @@
         }).fail(xhr => {
             console.log('Error');
         });
+    }
+
+    function showNotification(message) {
+        $notificationMessage.text(message);
+        $notificationPanel.show();
+        clearTimeout(g_notificationTimer);
+        g_notificationTimer = setTimeout(() => $notificationPanel.fadeOut('slow'), 3000);
     }
 
     function showModal(modalSelector) {

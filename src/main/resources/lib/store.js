@@ -184,6 +184,23 @@ exports.appNameInUse = function (name) {
     return appWithNameExists(repoConn, name);
 };
 
+/**
+ * Delete a license.
+ *
+ * @param {string} licenseId License id.
+ */
+exports.deleteLicense = function (licenseId) {
+    var repoConn = newConnection();
+
+    var licenseNode = repoConn.get(licenseId);
+    if (!licenseNode || licenseNode.type !== TYPE.LICENSE) {
+        return;
+    }
+
+    repoConn.delete(licenseId);
+    repoConn.refresh('SEARCH');
+};
+
 var appFromNode = function (node) {
     return {
         type: node.type,
