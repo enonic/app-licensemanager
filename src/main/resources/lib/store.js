@@ -41,6 +41,17 @@ var TYPE = {
  * @property {number} total Count of applications returned.
  */
 
+/**
+ * @typedef {Object} License
+ * @property {string} type Object type: 'license'
+ * @property {string} id License id.
+ * @property {string} issuedBy The entity that issued this license.
+ * @property {string} issuedTo The entity this license is issued to.
+ * @property {string} issueTime Time when the license was issued.
+ * @property {string} expiryTime ime when the license was issued.
+ * @property {string} license License string.
+ */
+
 var newConnection = function () {
     return nodeLib.connect({
         repoId: REPO_NAME,
@@ -135,7 +146,7 @@ exports.getApplications = function (start, count) {
 /**
  * Retrieve an application by its id.
  * @param  {string} id Application id.
- * @return {Application|null} Applications.
+ * @return {Application|null} Application.
  */
 exports.getApplicationById = function (id) {
     var repoConn = newConnection();
@@ -145,6 +156,41 @@ exports.getApplicationById = function (id) {
     }
 
     return appFromNode(result);
+};
+
+/**
+ * Retrieve a license by its id.
+ * @param  {string} id License id.
+ * @return {License|null} License.
+ */
+exports.getLicenseById = function (id) {
+    var repoConn = newConnection();
+    var result = repoConn.get(id);
+    if (!result || result.type !== TYPE.LICENSE) {
+        return null;
+    }
+
+    return licenseFromNode(result);
+};
+
+/**
+ * Retrieve an application by a license id.
+ * @param  {string} id License id.
+ * @return {Application|null} Application.
+ */
+exports.getApplicationByLicenseId = function (id) {
+    var repoConn = newConnection();
+    var licenseNode = repoConn.get(id);
+    if (!licenseNode || licenseNode.type !== TYPE.LICENSE) {
+        return null;
+    }
+    var path = licenseNode._path;
+    var p = path.lastIndexOf('/');
+    path = path.substring(0, p);
+    log.info(path);
+    var appNode = repoConn.get(path);
+
+    return appFromNode(appNode);
 };
 
 /**

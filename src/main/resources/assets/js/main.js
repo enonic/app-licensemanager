@@ -6,6 +6,7 @@
     const createLicenseUrl = svcUrl + 'createLicense';
     const deleteLicenseUrl = svcUrl + 'deleteLicense';
     const deleteAppUrl = svcUrl + 'deleteApp';
+    const downloadLicenseUrl = svcUrl + 'downloadLicense';
 
     const $newAppButton = $('#newAppBtn');
     const $cancelAppButton = $('#newAppCancelBtn');
@@ -28,6 +29,7 @@
     const $copyPrivateKeyBtn = $('#copyPrivateKeyBtn');
     const $copyPublicKeyBtn = $('#copyPublicKeyBtn');
     const $licenseTable = $('#licenseTable');
+    const $downloadLicenseBtn = $('#downloadLicenseBtn');
 
     const $breadcrumb = $('#breadcrumb');
     const $licIssuedBy = $('#licIssuedBy');
@@ -110,6 +112,17 @@
         });
     }
 
+    function showCurrentApp(resp) {
+        let apps = resp.apps;
+
+        for (let a = 0; a < apps.hits.length; a++) {
+            let app = apps.hits[a];
+            if (app.id === g_editAppId) {
+                showApp(app);
+            }
+        }
+    }
+
     function showApps(apps) {
         let $appRows = [];
         for (let i = 0, l = apps.hits.length; i < l; i++) {
@@ -119,10 +132,12 @@
             let $appIcon = $('<span class="panel-icon"></span>');
             let $appI = $('<i class="fas fa-shield-alt"></i>');
 
-
             $appIcon.append($appI);
             $divWrapper.append($appIcon).append(document.createTextNode(' ' + app.displayName));
             $appRow.append($divWrapper);
+            if (app.id === g_editAppId) {
+                $appRow.addClass('is-active');
+            }
             if (app.licenses.length > 0) {
                 let $licCount = $('<span class="tag is-small is-rounded is-link"/>').text(app.licenses.length);
                 $appRow.append($licCount);
@@ -199,6 +214,9 @@
         $viewLicenseExpiration.val(formatDate(license.expiryTime));
         $viewLicenseText.val(license.license);
 
+        let downloadUrl = downloadLicenseUrl + '?id=' + g_selectedLicense.id;
+        $downloadLicenseBtn.attr('href', downloadUrl);
+
         showModal('#viewLicenseModal');
 
         updateBreadcrumb(app.displayName);
@@ -219,8 +237,8 @@
 
         showModal('#newLicenseModal');
 
-        var t = new Date();
-        var t2 = new Date();
+        let t = new Date();
+        let t2 = new Date();
         t2.setFullYear(t2.getFullYear() + 1);
 
         $licIssuedBy.val('');
@@ -256,18 +274,7 @@
                 closeModals();
                 showNotification('License created.');
 
-                let licId = resp.license;
-                loadApps().then((resp) => {
-                    let apps = resp.apps;
-
-                    for (let a = 0; a < apps.hits.length; a++) {
-                        let app = apps.hits[a];
-                        if (app.id === g_editAppId) {
-                            showApp(app);
-                        }
-                    }
-                });
-
+                loadApps().then(showCurrentApp);
             }
 
         }).fail(xhr => {
@@ -304,8 +311,9 @@
             $saveAppButton.prop('disabled', false);
             if (resp.ok) {
                 closeModals();
-                loadApps();
                 showNotification('Application created.');
+                g_editAppId = resp.id;
+                loadApps().then(showCurrentApp);
             } else {
                 $appDisplayNameInput.addClass('is-danger');
             }
@@ -333,7 +341,7 @@
             $editSaveBtn.prop('disabled', false);
             if (resp.ok) {
                 showNotification('Application changes saved.');
-                loadApps();
+                loadApps().then(showCurrentApp);
             }
 
         }).fail(xhr => {
@@ -360,16 +368,7 @@
             $confirmDeleteLicenseBtn.prop('disabled', false);
             showNotification('The license has been deleted.');
             closeModals();
-            loadApps().then((resp) => {
-                let apps = resp.apps;
-
-                for (let a = 0; a < apps.hits.length; a++) {
-                    let app = apps.hits[a];
-                    if (app.id === g_editAppId) {
-                        showApp(app);
-                    }
-                }
-            });
+            loadApps().then(showCurrentApp);
 
         }).fail(xhr => {
             $confirmDeleteLicenseBtn.prop('disabled', false);
@@ -416,18 +415,18 @@
     }
 
     function updateBreadcrumb(appName) {
-        var lis = [];
-        var $appsRootIcon = $('<span class="icon is-small"><i class="fas fa-shield-alt" aria-hidden="true"></i></span>');
-        var $appsRootText = $('<span>Applications</span>');
-        var $appsRootA = $('<a href="#" aria-current="page"></a>').append($appsRootIcon).append($appsRootText);
-        var $appsRoot = $('<li/>').append($appsRootA);
+        let lis = [];
+        let $appsRootIcon = $('<span class="icon is-small"><i class="fas fa-shield-alt" aria-hidden="true"></i></span>');
+        let $appsRootText = $('<span>Applications</span>');
+        let $appsRootA = $('<a href="#" aria-current="page"></a>').append($appsRootIcon).append($appsRootText);
+        let $appsRoot = $('<li/>').append($appsRootA);
         $appsRoot.toggleClass('is-active', !appName);
         lis.push($appsRoot);
 
         if (appName) {
-            var $appRootText = $('<span/>').text(appName);
-            var $appRootA = $('<a href="#" aria-current="page"></a>').append($appRootText);
-            var $appRoot = $('<li/>').append($appRootA).addClass('is-active');
+            let $appRootText = $('<span/>').text(appName);
+            let $appRootA = $('<a href="#" aria-current="page"></a>').append($appRootText);
+            let $appRoot = $('<li/>').append($appRootA).addClass('is-active');
             lis.push($appRoot);
         }
 
@@ -443,9 +442,9 @@
     }
 
     function showNotification(message, type) {
-        var isWarning = type === 'warning';
-        var isError = type === 'error';
-        var isInfo = !isWarning && !isError;
+        let isWarning = type === 'warning';
+        let isError = type === 'error';
+        let isInfo = !isWarning && !isError;
         $notificationMessage.text(message);
         $notificationPanel.show();
         $notificationPanel.toggleClass('is-info', isInfo).toggleClass('is-warning', isWarning).toggleClass('is-danger', isError);
@@ -468,24 +467,5 @@
     function formatDate(date) {
         return date ? new Date(date).toLocaleDateString() : '';
     }
-
-    var debounce = function (func, wait, immediate) {
-        var timeout;
-        return function () {
-            var context = this, args = arguments;
-            var later = function () {
-                timeout = null;
-                if (!immediate) {
-                    func.apply(context, args);
-                }
-            };
-            var callNow = immediate && !timeout;
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-            if (callNow) {
-                func.apply(context, args);
-            }
-        };
-    };
 
 })(jQuery);
