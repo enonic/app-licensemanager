@@ -3,6 +3,7 @@
     const svcUrl = document.currentScript.getAttribute('data-svcurl');
     const saveAppUrl = svcUrl + 'saveApp';
     const getAppsUrl = svcUrl + 'getApps';
+    const getLicensesUrl = svcUrl + 'getLicenses';
     const createLicenseUrl = svcUrl + 'createLicense';
     const deleteLicenseUrl = svcUrl + 'deleteLicense';
     const deleteAppUrl = svcUrl + 'deleteApp';
@@ -112,6 +113,20 @@
         });
     }
 
+    function loadLicenses(appId) {
+        return $.ajax({
+            url: getLicensesUrl,
+            method: "GET",
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: {id: appId}
+        }).done(resp => {
+            console.log(resp);
+
+        }).fail(xhr => {
+            showNotificationError(GenericErrorMessage);
+        });
+    }
+
     function showCurrentApp(resp) {
         let apps = resp.apps;
 
@@ -138,8 +153,8 @@
             if (app.id === g_editAppId) {
                 $appRow.addClass('is-active');
             }
-            if (app.licenses.length > 0) {
-                let $licCount = $('<span class="tag is-small is-rounded is-link"/>').text(app.licenses.length);
+            if (app.licenseCount > 0) {
+                let $licCount = $('<span class="tag is-small is-rounded is-link"/>').text(app.licenseCount);
                 $appRow.append($licCount);
             }
 
@@ -151,10 +166,10 @@
         $appList.append($appRows);
     }
 
-    function showLicenses(app) {
+    function showLicenses(app, licenses) {
         let rows = [];
-        for (let i = 0, l = app.licenses.length; i < l; i++) {
-            let license = app.licenses[i];
+        for (let i = 0, l = licenses.length; i < l; i++) {
+            let license = licenses[i];
             let $licRow = $('<tr>');
             let $issuedBy = $('<td/>').text(license.issuedBy);
             let $issuedTo = $('<td/>').text(license.issuedTo);
@@ -191,6 +206,11 @@
     function showApp(app) {
         g_editAppId = app.id;
 
+        $licenseTable.empty();
+        loadLicenses(app.id).then((resp) => {
+            showLicenses(app, resp.licenses.hits);
+        });
+
         $editAppTitle.text(app.displayName);
         $editAppPrivKey.val(app.privateKey);
         $editAppPubKey.val(app.publicKey);
@@ -198,8 +218,6 @@
         $editAppPanel.show();
 
         $editAppNotes.focus();
-
-        showLicenses(app);
 
         updateBreadcrumb(app.displayName);
     }

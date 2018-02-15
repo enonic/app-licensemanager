@@ -32,6 +32,7 @@ var TYPE = {
  * @property {string} privateKey Private key for generating licenses.
  * @property {string} publicKey Public key for validating licenses.
  * @property {string} notes Notes and comments.
+ * @property {number} [licenseCount] Number of licenses for this app.
  */
 
 /**
@@ -50,6 +51,13 @@ var TYPE = {
  * @property {string} issueTime Time when the license was issued.
  * @property {string} expiryTime ime when the license was issued.
  * @property {string} license License string.
+ */
+
+/**
+ * @typedef {Object} LicenseResponse
+ * @property {License[]} hits Array of license objects.
+ * @property {number} count Total number of licenses.
+ * @property {number} total Count of licenses returned.
  */
 
 var newConnection = function () {
@@ -102,6 +110,8 @@ exports.createApp = function (params) {
         notes: params.notes || ''
     });
 
+    repoConn.refresh('SEARCH');
+
     return appNode._id;
 };
 
@@ -138,9 +148,38 @@ exports.getApplications = function (start, count) {
         query: "type = '" + TYPE.APPLICATION + "'",
         sort: "name ASC"
     });
-    apps.hits = apps.hits.map(fetchAppLicenses).map(appFromNode);
+    apps.hits = apps.hits.map(getLicenseCount).map(appFromNode);
 
     return apps;
+};
+
+/**
+ * Retrieve the list of licenses for an application.
+ * @param  {string} appId Application id.
+ * @param  {number} [start=0] First index of the applications.
+ * @param  {number} [count=10] Number of applications to fetch.
+ * @return {LicenseResponse} Applications.
+ */
+exports.getLicenses = function (appId, start, count) {
+    var repoConn = newConnection();
+    var appNode = repoConn.get(appId);
+    if (!appNode || appNode.type !== TYPE.APPLICATION) {
+        return {
+            count: 0,
+            total: 0,
+            license: []
+        };
+    }
+
+    var licenses = query({
+        start: start || 0,
+        count: count || 20,
+        query: "_parentPath = '" + appNode._path + "' AND type = '" + TYPE.LICENSE + "'",
+        sort: "_timestamp DESC"
+    });
+    licenses.hits = licenses.hits.map(licenseFromNode);
+
+    return licenses;
 };
 
 /**
@@ -226,6 +265,8 @@ exports.createLicense = function (params) {
         license: params.license
     });
 
+    repoConn.refresh('SEARCH');
+
     return licenseNode._id;
 };
 
@@ -278,7 +319,8 @@ var appFromNode = function (node) {
         privateKey: node.privateKey,
         publicKey: node.publicKey,
         notes: node.notes,
-        licenses: node.licenses || []
+        licenses: node.licenses || [],
+        licenseCount: node.licenseCount
     }
 };
 
@@ -294,19 +336,13 @@ var licenseFromNode = function (node) {
     }
 };
 
-var fetchAppLicenses = function (appNode) {
+var getLicenseCount = function (appNode) {
     var licenses = query({
         start: 0,
-        count: 100,
+        count: 0,
         query: "type = '" + TYPE.LICENSE + "' AND _parentPath = '" + appNode._path + "'"
     });
-    var licenseList = [];
-    var i, l, licenseNode;
-    for (i = 0, l = licenses.hits.length; i < l; i++) {
-        licenseNode = licenses.hits[i];
-        licenseList.push(licenseNode);
-    }
-    appNode.licenses = licenseList.map(licenseFromNode);
+    appNode.licenseCount = licenses.total;
     return appNode;
 };
 

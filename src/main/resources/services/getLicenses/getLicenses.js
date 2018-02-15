@@ -2,14 +2,14 @@ var storeLib = require('/lib/store');
 
 exports.get = function (req) {
 
-    var apps = storeLib.getApplications();
+    var licenses = storeLib.getLicenses(req.params.id);
 
     return {
         contentType: 'application/json',
         status: 200,
         body: {
             ok: true,
-            apps: apps
+            licenses: licenses
         }
     }
 };

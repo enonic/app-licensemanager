@@ -2,7 +2,6 @@ var storeLib = require('/lib/store');
 
 exports.get = function (req) {
 
-    storeLib.refresh();
     var license = storeLib.getLicenseById(req.params.id);
     if (!license) {
         return {
