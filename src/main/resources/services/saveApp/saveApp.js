@@ -2,37 +2,25 @@ var storeLib = require('/lib/store');
 var licenseLib = require('/lib/license');
 
 exports.post = function (req) {
-    var name = req.params.name;
     var displayName = req.params.displayName;
     var id = req.params.id;
     var notes = req.params.notes || '';
 
     if (!id) {
-        return createApp(name, displayName);
+        return createApp(displayName, notes);
     } else {
         return updateApp(id, notes);
     }
 };
 
-var createApp = function (name, displayName) {
-    if (storeLib.appNameInUse(name)) {
-        return {
-            contentType: 'application/json',
-            status: 200,
-            body: {
-                ok: false,
-                reason: 'Name already in use'
-            }
-        }
-    }
-
+var createApp = function (displayName, notes) {
     var keyPairObj = licenseLib.generateKeyPair();
 
     var appId = storeLib.createApp({
-        name: name,
         displayName: displayName,
         privateKey: keyPairObj.privateKey,
-        publicKey: keyPairObj.publicKey
+        publicKey: keyPairObj.publicKey,
+        notes: notes
     });
 
     return {

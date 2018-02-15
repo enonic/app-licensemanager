@@ -15,14 +15,6 @@ section.hero div.hero-head nav div.navbar-brand {
     align-items: center;
 }
 
-.panel-block.panel-level2 {
-    padding-left: 20px;
-}
-
-.panel-block.panel-level3 {
-    padding-left: 40px;
-}
-
 div.modal-card section div.field-body {
     flex-grow: 3;
 }
@@ -34,13 +26,35 @@ div.modal-card section div.field-body {
     opacity: 0.9;
     text-align: center;
     display: none;
+    z-index: 100;
+    margin-bottom: 0;
 }
 
 .notification.license-feedback > .delete {
-    right: 0.5rem;
-    top: 0.5rem;
+    right: 1.25rem;
+    top: 1.25rem;
+}
+
+.notification.license-feedback h2 {
+    text-transform: none;
 }
 
 div.modal-card > footer {
     justify-content: flex-end;
+}
+
+#appList .panel-block.is-active {
+    border-left-color: #3273dc;
+}
+
+#appList .panel-block.is-active .panel-icon {
+    color: #3273dc;
+}
+
+#appList .panel-block.is-active > span {
+    background-color: #3273dc;
+}
+
+#licenseTable > tr {
+    cursor: pointer;
 }

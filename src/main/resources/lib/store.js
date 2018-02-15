@@ -62,7 +62,6 @@ exports.prettifyName = function (text) {
  * Create a new application.
  *
  * @param {object} params JSON with the application parameters.
- * @param {string} params.name Unique name of the application.
  * @param {string} params.displayName Display name of the application.
  * @param {string} params.privateKey Private key for generating licenses.
  * @param {string} params.publicKey Public key for validating licenses.
@@ -71,15 +70,21 @@ exports.prettifyName = function (text) {
  */
 exports.createApp = function (params) {
     var repoConn = newConnection();
-    var nodeName = exports.prettifyName(params.name);
-    // TODO validation
+
+    var sourceName = params.displayName;
+    var nodeName = exports.prettifyName(sourceName);
+    var i = 1;
+    while (exports.appNameInUse(nodeName)) {
+        i += 1;
+        nodeName = exports.prettifyName(sourceName) + '-' + i;
+    }
 
     var appNode = repoConn.create({
         _name: nodeName,
         _parentPath: APPLICATIONS_PATH,
         _permissions: NODE_PERMISSIONS,
         type: TYPE.APPLICATION,
-        name: params.name,
+        name: nodeName,
         displayName: params.displayName,
         privateKey: params.privateKey,
         publicKey: params.publicKey,

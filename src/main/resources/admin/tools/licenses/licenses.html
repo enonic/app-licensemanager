@@ -46,10 +46,6 @@
             </div>
         </nav>
     </div>
-    <div class="notification is-info license-feedback" id="notificationPanel">
-        <button class="delete"></button>
-        <span id="notificationMessage">Primar lorem ipsum dolor sit amet, consectetur</span>
-    </div>
 </section>
 
 <br/>
@@ -62,7 +58,7 @@
                     <p class="panel-heading">Applications</p>
                     <div class="panel-block">
                         <p class="control has-icons-left">
-                            <input class="input is-small" type="text" placeholder="search">
+                            <input class="input is-small" type="text" placeholder="search" id="searchText">
                             <span class="icon is-small is-left"><i class="fas fa-search"></i></span>
                         </p>
                     </div>
@@ -90,7 +86,8 @@
                                     <input class="input" type="text" readonly="readonly" id="editAppPrivKey">
                                 </p>
                                 <p class="control">
-                                    <a class="button is-info" title="Copy to clipboard" id="copyPrivateKeyBtn" data-clipboard-target="#editAppPrivKey"><i class="far fa-copy"></i></a>
+                                    <a class="button is-info" title="Copy to clipboard" id="copyPrivateKeyBtn"
+                                       data-clipboard-target="#editAppPrivKey"><i class="far fa-copy"></i></a>
                                 </p>
                             </div>
                         </div>
@@ -106,7 +103,8 @@
                                     <input class="input" type="text" readonly="readonly" id="editAppPubKey">
                                 </p>
                                 <p class="control">
-                                    <a class="button is-info" title="Copy to clipboard" id="copyPublicKeyBtn" data-clipboard-target="#editAppPubKey"><i class="far fa-copy"></i></a>
+                                    <a class="button is-info" title="Copy to clipboard" id="copyPublicKeyBtn"
+                                       data-clipboard-target="#editAppPubKey"><i class="far fa-copy"></i></a>
                                 </p>
                             </div>
                         </div>
@@ -119,7 +117,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <p class="control">
-                                    <textarea class="textarea" rows="6" id="editAppNotes"></textarea>
+                                    <textarea class="textarea" rows="2" id="editAppNotes"></textarea>
                                 </p>
                             </div>
                         </div>
@@ -127,15 +125,36 @@
                     <br/>
                     <div class="field is-grouped is-grouped-right">
                         <div class="control">
-                            <button class="button is-danger" id="deleteAppBtn">Delete</button>
+                            <button class="button is-outlined is-danger" id="deleteAppBtn">Delete application</button>
                         </div>
+                        <!--<div class="control">-->
+                        <!--<button class="button is-outlined is-info" id="editNewLicenseBtn">New License</button>-->
+                        <!--</div>-->
                         <div class="control">
-                            <button class="button is-info" id="editNewLicenseBtn">New License</button>
-                        </div>
-                        <div class="control">
-                            <button class="button is-success" id="editSaveBtn">Save Changes</button>
+                            <button class="button is-outlined is-success" id="editSaveBtn">Save Changes</button>
                         </div>
                     </div>
+                    <hr/>
+                    <div>
+                        <div class="control">
+                            <button class="button is-outlined is-info is-pulled-right" id="editNewLicenseBtn">New License</button>
+                        </div>
+
+                        <h5 class="title is-5"><i class="fas fa-key"></i> Licenses</h5>
+
+                        <table class="table is-hoverable is-striped is-fullwidth">
+                            <thead>
+                            <tr>
+                                <th>Issued by</th>
+                                <th>Issued to</th>
+                                <th>Issue date</th>
+                                <th>Expiration</th>
+                            </tr>
+                            </thead>
+                            <tbody id="licenseTable"></tbody>
+                        </table>
+                    </div>
+
                 </div>
 
                 <!-- view license -->
@@ -203,7 +222,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <p class="control">
-                                    <textarea class="textarea" rows="8" readonly="readonly" id="viewLicenseText"></textarea>
+                                    <textarea class="textarea" rows="10" readonly="readonly" id="viewLicenseText"></textarea>
                                 </p>
                             </div>
                         </div>
@@ -211,7 +230,13 @@
 
                     <div class="field is-grouped is-grouped-right">
                         <div class="control">
-                            <button class="button is-danger" id="deleteLicenseBtn">Delete</button>
+                            <button class="button is-outlined is-info" id="sendLicenseBtn">Send</button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-outlined is-info" id="downloadLicenseBtn">Download</button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-outlined is-danger" id="deleteLicenseBtn">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -232,7 +257,7 @@
             <div class="container is-fluid">
                 <div class="field is-horizontal">
                     <div class="field-label is-normal">
-                        <label class="label">Display name</label>
+                        <label class="label">Name</label>
                     </div>
                     <div class="field-body">
                         <div class="field">
@@ -245,14 +270,13 @@
 
                 <div class="field is-horizontal">
                     <div class="field-label is-normal">
-                        <label class="label">Name</label>
+                        <label class="label">Notes</label>
                     </div>
                     <div class="field-body">
                         <div class="field">
                             <p class="control">
-                                <input class="input" type="text" placeholder="Unique name" id="newAppName">
+                                <textarea class="textarea" rows="2" placeholder="Application notes" id="newAppNotes"></textarea>
                             </p>
-                            <p class="help is-invisible is-danger" id="appErrorExists">An application with this name already exists.</p>
                         </div>
                     </div>
                 </div>
@@ -374,6 +398,11 @@
             <button class="button" id="cancelDeleteApplicationBtn">Cancel</button>
         </footer>
     </div>
+</div>
+
+<div class="notification is-info license-feedback" id="notificationPanel">
+    <button class="delete"></button>
+    <h2 id="notificationMessage">Primar lorem ipsum dolor sit amet, consectetur</h2>
 </div>
 
 <script src="{{assetsUri}}/js/jquery-3.3.1.min.js"></script>
