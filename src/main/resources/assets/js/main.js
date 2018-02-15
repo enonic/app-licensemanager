@@ -222,6 +222,13 @@
         updateBreadcrumb(app.displayName);
     }
 
+    function unselectApp() {
+        g_editAppId = null;
+        g_selectedLicense = null;
+        $editAppPanel.hide();
+        loadApps();
+    }
+
     function showLicense(app, license) {
         g_editAppId = app.id;
         g_selectedLicense = license;
@@ -259,6 +266,11 @@
         let t2 = new Date();
         t2.setFullYear(t2.getFullYear() + 1);
 
+        $licIssuedBy.removeClass('is-danger');
+        $licIssuedTo.removeClass('is-danger');
+        $licIssueTime.removeClass('is-danger');
+        $licExpirationTime.removeClass('is-danger');
+
         $licIssuedBy.val('');
         $licIssuedTo.val('');
         $licIssueTime.val(t.toISOString().substring(0, 10));
@@ -269,10 +281,43 @@
 
     function createLicense(e) {
         e.preventDefault();
-        let issuedBy = $licIssuedBy.val();
-        let issuedTo = $licIssuedTo.val();
+        $licIssuedBy.removeClass('is-danger');
+        $licIssuedTo.removeClass('is-danger');
+        $licIssueTime.removeClass('is-danger');
+        $licExpirationTime.removeClass('is-danger');
+
+        let issuedBy = $licIssuedBy.val().trim();
+        let issuedTo = $licIssuedTo.val().trim();
         let issueTime = $licIssueTime.val();
         let expirationTime = $licExpirationTime.val();
+        let issueDate = parseDate(issueTime);
+        let expirationDate = parseDate(expirationTime);
+
+        let error = false;
+        if (issuedBy === '') {
+            $licIssuedBy.addClass('is-danger');
+            error = true;
+        }
+        if (issuedTo === '') {
+            $licIssuedTo.addClass('is-danger');
+            error = true;
+        }
+        if (issueTime && !issueDate) {
+            $licIssueTime.addClass('is-danger');
+            error = true;
+        }
+        if (expirationTime && !expirationDate) {
+            $licExpirationTime.addClass('is-danger');
+            error = true;
+        }
+        if (expirationDate && issueDate && (issueDate.getTime() >= expirationDate.getTime())) {
+            $licIssueTime.addClass('is-danger');
+            $licExpirationTime.addClass('is-danger');
+            error = true;
+        }
+        if (error) {
+            return;
+        }
 
         $createLicenseBtn.prop('disabled', true);
         $.ajax({
@@ -439,6 +484,7 @@
         let $appsRootA = $('<a href="#" aria-current="page"></a>').append($appsRootIcon).append($appsRootText);
         let $appsRoot = $('<li/>').append($appsRootA);
         $appsRoot.toggleClass('is-active', !appName);
+        $appsRoot.on('click', unselectApp);
         lis.push($appsRoot);
 
         if (appName) {
@@ -484,6 +530,18 @@
 
     function formatDate(date) {
         return date ? new Date(date).toLocaleDateString() : '';
+    }
+
+    function parseDate(dateVal) {
+        dateVal = dateVal.trim();
+        if (!dateVal.match(/^(\d{4})\-(\d{1,2})\-(\d{1,2})$/)) {
+            return null;
+        }
+        let parts = dateVal.split('-');
+        if (parts.length !== 3) {
+            return null;
+        }
+        return new Date(parts[0], parts[1] - 1, parts[2]);
     }
 
 })(jQuery);
