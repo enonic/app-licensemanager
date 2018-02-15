@@ -73,6 +73,7 @@
         $cancelDeleteApplicationBtn.on('click', closeModals);
         $copyPrivateKeyBtn.on('click', copyPrivateKeyClipboard);
         $copyPublicKeyBtn.on('click', copyPublicKeyClipboard);
+        $searchText.on('keyup', onSearchTyping);
 
         new Clipboard('#copyPrivateKeyBtn,#copyPublicKeyBtn');
 
@@ -104,7 +105,9 @@
             url: getAppsUrl,
             method: "GET",
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: {}
+            data: {
+                search: $searchText.val().trim()
+            }
         }).done(resp => {
             showApps(resp.apps);
 
@@ -120,7 +123,6 @@
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
             data: {id: appId}
         }).done(resp => {
-            console.log(resp);
 
         }).fail(xhr => {
             showNotificationError(GenericErrorMessage);
@@ -227,6 +229,7 @@
         g_selectedLicense = null;
         $editAppPanel.hide();
         updateBreadcrumb();
+        $searchText.val('');
         loadApps();
     }
 
@@ -466,6 +469,15 @@
             $confirmDeleteApplicationBtn.prop('disabled', false);
             showNotificationError(GenericErrorMessage);
         });
+    }
+
+    function onSearchTyping(e) {
+        var code = e.which;
+        if (code === 13) {
+            e.preventDefault();
+            var searchText = $searchText.val();
+            loadApps();
+        }
     }
 
     function copyPrivateKeyClipboard(e) {

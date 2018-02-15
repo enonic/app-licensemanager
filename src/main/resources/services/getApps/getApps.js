@@ -1,8 +1,9 @@
 var storeLib = require('/lib/store');
 
 exports.get = function (req) {
+    var search = req.params.search;
 
-    var apps = storeLib.getApplications();
+    var apps = storeLib.getApplications(search);
 
     return {
         contentType: 'application/json',

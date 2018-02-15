@@ -137,15 +137,21 @@ exports.updateApp = function (params) {
 
 /**
  * Retrieve a list of applications.
+ * @param  {string} [search] Search text.
  * @param  {number} [start=0] First index of the applications.
  * @param  {number} [count=10] Number of applications to fetch.
  * @return {ApplicationResponse} Applications.
  */
-exports.getApplications = function (start, count) {
+exports.getApplications = function (search, start, count) {
+    var searchQuery = '';
+    if (search) {
+        search = search.replace("'", '');
+        searchQuery = " AND fulltext('name^5,notes', '" + search + "', 'AND')"
+    }
     var apps = query({
         start: start || 0,
         count: count || 20,
-        query: "type = '" + TYPE.APPLICATION + "'",
+        query: "type = '" + TYPE.APPLICATION + "'" + searchQuery,
         sort: "name ASC"
     });
     apps.hits = apps.hits.map(getLicenseCount).map(appFromNode);
