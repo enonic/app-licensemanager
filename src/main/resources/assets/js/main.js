@@ -69,7 +69,7 @@
         $createLicenseBtn.on('click', createLicense);
         $deleteLicenseBtn.on('click', deleteLicenseConfirm);
         $confirmDeleteLicenseBtn.on('click', deleteLicense);
-        $cancelDeleteLicenseBtn.on('click', closeModals);
+        $cancelDeleteLicenseBtn.on('click', closeModal);
         $cancelDeleteApplicationBtn.on('click', closeModals);
         $copyPrivateKeyBtn.on('click', copyPrivateKeyClipboard);
         $copyPublicKeyBtn.on('click', copyPublicKeyClipboard);
@@ -226,6 +226,7 @@
         g_editAppId = null;
         g_selectedLicense = null;
         $editAppPanel.hide();
+        updateBreadcrumb();
         loadApps();
     }
 
@@ -523,7 +524,14 @@
         $html.addClass('is-clipped');
     }
 
-    function closeModals() {
+    function closeModal(e) {
+        e && e.preventDefault();
+        $(this).closest('.modal').removeClass('is-active');
+        $('html').removeClass('is-clipped');
+    }
+
+    function closeModals(e) {
+        e && e.preventDefault();
         $('.modal').removeClass('is-active');
         $('html').removeClass('is-clipped');
     }
