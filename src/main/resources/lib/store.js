@@ -1,8 +1,9 @@
 var nodeLib = require('/lib/xp/node');
+var repoLib = require('/lib/xp/repo');
 
-var REPO_NAME = 'license-repo';
+var REPO_NAME = 'com.enonic.licensemanager';
 var APPLICATIONS_PATH = '/applications';
-var NODE_PERMISSIONS = [
+var ROOT_PERMISSIONS = [
     {
         'principal': 'role:system.authenticated',
         'allow': [
@@ -77,6 +78,54 @@ exports.prettifyName = function (text) {
     return namePrettyfier.create(text);
 };
 
+exports.initialize= function () {
+    var result = repoLib.get(REPO_NAME);
+
+    if (result) {
+        log.info('Repository found');
+    } else {
+        log.info('Repository not found');
+        createRepo();
+    }
+    createRootNodes();
+};
+
+var createRepo = function () {
+    log.info('Creating repository...');
+    var newRepo = repoLib.create({
+        id: REPO_NAME,
+        rootPermissions: ROOT_PERMISSIONS
+    });
+    log.info('Repository created.');
+};
+
+var createRootNodes = function () {
+    var repoConn = nodeLib.connect({
+        repoId: REPO_NAME,
+        branch: 'master'
+    });
+
+    var applicationsExist = nodeWithPathExists(repoConn, APPLICATIONS_PATH);
+    if (!applicationsExist) {
+        log.info('Creating node [' + APPLICATIONS_PATH + '] ...');
+        var appsNode = repoConn.create({
+            _name: APPLICATIONS_PATH.slice(1),
+            _parentPath: '/',
+            _inheritsPermissions: true
+        });
+    }
+};
+
+var nodeWithPathExists = function (repoConnection, path) {
+    var result = repoConnection.query({
+        start: 0,
+        count: 0,
+        query: "_path = '" + path + "'"
+    });
+    return result.total > 0;
+};
+
+
 /**
  * Create a new application.
  *
@@ -101,7 +150,8 @@ exports.createApp = function (params) {
     var appNode = repoConn.create({
         _name: nodeName,
         _parentPath: APPLICATIONS_PATH,
-        _permissions: NODE_PERMISSIONS,
+        // _permissions: NODE_PERMISSIONS,
+        _inheritsPermissions: true,
         type: TYPE.APPLICATION,
         name: nodeName,
         displayName: params.displayName,
@@ -262,7 +312,8 @@ exports.createLicense = function (params) {
     var licenseNode = repoConn.create({
         _parentPath: app._path,
         _name: name,
-        _permissions: NODE_PERMISSIONS,
+        // _permissions: NODE_PERMISSIONS,
+        _inheritsPermissions: true,
         type: TYPE.LICENSE,
         issuedBy: params.issuedBy,
         issuedTo: params.issuedTo,
