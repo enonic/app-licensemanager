@@ -78,7 +78,7 @@ exports.prettifyName = function (text) {
     return namePrettyfier.create(text);
 };
 
-exports.initialize= function () {
+exports.initialize = function () {
     var result = repoLib.get(REPO_NAME);
 
     if (result) {
@@ -409,7 +409,7 @@ var generateLicenseName = function (parentPath, sourceName) {
 
     var name = exports.prettifyName(sourceName);
     var i = 1;
-    while (licenseWithNameExists(repoConn, name)) {
+    while (licenseWithNameExists(repoConn, parentPath, name)) {
         i += 1;
         name = exports.prettifyName(sourceName) + '-' + i;
     }

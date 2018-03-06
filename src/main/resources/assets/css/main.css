@@ -58,3 +58,11 @@ div.modal-card > footer {
 #licenseTable > tr {
     cursor: pointer;
 }
+
+#viewLicenseModal input {
+    border-color: #efefef;
+}
+
+#viewLicenseModal textarea   {
+        border-color: #efefef;
+}

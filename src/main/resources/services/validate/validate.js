@@ -12,7 +12,10 @@ exports.post = function (req) {
         }
     }
 
-    var licenseDetails = licenseLib.validateLicense(encodedLicense, publicKey);
+    var licenseDetails = licenseLib.validateLicense({
+        license: encodedLicense,
+        publicKey: publicKey
+    });
 
     return {
         contentType: 'application/json',
