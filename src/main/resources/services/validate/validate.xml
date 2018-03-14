@@ -1,5 +1,6 @@
 <service>
   <allow>
-    <principal>role:system.authenticated</principal>
+    <principal>role:system.admin</principal>
+    <principal>role:com.enonic.app.licensemanager</principal>
   </allow>
 </service>

@@ -4,5 +4,6 @@
   <description>Generate and manage app licenses</description>
   <allow>
     <principal>role:system.admin</principal>
+    <principal>role:com.enonic.app.licensemanager</principal>
   </allow>
 </tool>

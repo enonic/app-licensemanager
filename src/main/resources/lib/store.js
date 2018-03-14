@@ -2,10 +2,24 @@ var nodeLib = require('/lib/xp/node');
 var repoLib = require('/lib/xp/repo');
 
 var REPO_NAME = 'com.enonic.licensemanager';
+
 var APPLICATIONS_PATH = '/applications';
 var ROOT_PERMISSIONS = [
     {
-        'principal': 'role:system.authenticated',
+        'principal': 'role:system.admin',
+        'allow': [
+            'READ',
+            'CREATE',
+            'MODIFY',
+            'DELETE',
+            'PUBLISH',
+            'READ_PERMISSIONS',
+            'WRITE_PERMISSIONS'
+        ],
+        'deny': []
+    },
+    {
+        'principal': 'role:com.enonic.app.licensemanager',
         'allow': [
             'READ',
             'CREATE',
@@ -82,16 +96,15 @@ exports.initialize = function () {
     var result = repoLib.get(REPO_NAME);
 
     if (result) {
-        log.info('Repository found');
+        log.info('Node repository found');
     } else {
-        log.info('Repository not found');
         createRepo();
     }
     createRootNodes();
 };
 
 var createRepo = function () {
-    log.info('Creating repository...');
+    log.info('Creating node repository...');
     var newRepo = repoLib.create({
         id: REPO_NAME,
         rootPermissions: ROOT_PERMISSIONS
