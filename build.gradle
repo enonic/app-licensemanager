@@ -22,7 +22,7 @@ dependencies {
     include "com.enonic.xp:lib-repo:${xpVersion}"
     include "com.enonic.xp:lib-node:${xpVersion}"
     include "com.enonic.xp:lib-context:${xpVersion}"
-    include 'com.enonic.lib:license:1.0.0-SNAPSHOT'
+    include 'com.enonic.lib:license:1.0.0'
 }
 
 repositories {
