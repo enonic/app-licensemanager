@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <tool xmlns="urn:enonic:xp:model:1.0">
-  <display-name>Licenses</display-name>
-  <description>Generate and manage app licenses</description>
+  <display-name>License Manager</display-name>
+  <description>Generate and manage licenses</description>
   <allow>
     <principal>role:system.admin</principal>
     <principal>role:com.enonic.app.licensemanager</principal>
