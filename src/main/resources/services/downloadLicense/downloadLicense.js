@@ -13,7 +13,8 @@ exports.get = function (req) {
     var app = storeLib.getApplicationByLicenseId(req.params.id);
 
     var body = license.license;
-    var fileName = storeLib.prettifyName(app.displayName) + '.lic';
+    var fileName = storeLib.prettifyName(license.issuedTo) + '-' + storeLib.prettifyName(app.displayName) + '-' +
+                   license.issueTime.substring(0, 10) + '.lic';
 
     return {
         contentType: 'text/plain',
