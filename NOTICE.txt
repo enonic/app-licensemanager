@@ -1,0 +1,30 @@
+Licenses used by License Manager
+
+
+    JQuery
+    MIT License
+    https://jquery.org/license/
+
+    JMustache
+    BSD 3-clause
+    https://github.com/samskivert/jmustache/blob/master/LICENSE
+
+    clipboard.js
+    MIT License
+    https://github.com/zenorocha/clipboard.js/
+
+    Datepicker
+    MIT License
+    https://github.com/fengyuanchen/datepicker
+
+    Font Awesome Free
+    MIT License
+    https://fontawesome.com
+
+    Bulma
+    MIT License
+    https://github.com/jgthms/bulma
+
+    Bulmaswatch
+    MIT License
+    https://jenil.github.io/bulmaswatch/
