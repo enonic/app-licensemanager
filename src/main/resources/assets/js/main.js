@@ -278,7 +278,7 @@
         $licIssuedBy.val('');
         $licIssuedTo.val('');
         $licIssueTime.val(t.toISOString().substring(0, 10));
-        $licExpirationTime.val(t2.toISOString().substring(0, 10));
+        $licExpirationTime.val();
 
         $licIssuedBy.focus();
     }
