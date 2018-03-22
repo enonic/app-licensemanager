@@ -1,6 +1,10 @@
 plugins {
+    id 'java'
+    id 'maven'
+    id 'com.enonic.defaults' version '1.0.3'
     id 'com.enonic.xp.app' version '1.1.0'
 }
+
 
 apply plugin: 'com.enonic.xp.app'
 apply plugin: 'maven'
@@ -26,17 +30,6 @@ dependencies {
 }
 
 repositories {
-    mavenLocal()
-    mavenCentral()
-    maven {
-        url 'http://repo.enonic.com/public'
-    }
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository( url: 'http://repo.enonic.com/artifactory/public' )
-        }
-    }
+    jcenter()
+    xp.enonicRepo()
 }
