@@ -242,9 +242,9 @@ exports.getLicenses = function (appId, start, count) {
 
     var licenses = query({
         start: start || 0,
-        count: count || 20,
+        count: count || 1000,
         query: "_parentPath = '" + appNode._path + "' AND type = '" + TYPE.LICENSE + "'",
-        sort: "_timestamp DESC"
+        sort: "_ts DESC"
     });
     licenses.hits = licenses.hits.map(licenseFromNode);
 

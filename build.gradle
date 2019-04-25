@@ -1,19 +1,15 @@
 plugins {
     id 'java'
-    id 'maven'
-    id 'com.enonic.defaults' version '1.0.3'
-    id 'com.enonic.xp.app' version '1.1.0'
+    id 'maven-publish'
+    id 'com.enonic.defaults' version '2.0.1'
+    id 'com.enonic.xp.app' version '2.0.0'
 }
-
-
-apply plugin: 'com.enonic.xp.app'
-apply plugin: 'maven'
 
 app {
     name = project.appName
     displayName = 'License Manager'
     vendorName = 'Enonic AS'
-    vendorUrl = 'http://enonic.com'
+    vendorUrl = 'https://enonic.com'
     systemVersion = "${xpVersion}"
 }
 
@@ -22,11 +18,11 @@ dependencies {
     compile "com.enonic.xp:portal-api:${xpVersion}"
     include "com.enonic.xp:lib-portal:${xpVersion}"
     include "com.enonic.xp:lib-auth:${xpVersion}"
-    include "com.enonic.xp:lib-mustache:${xpVersion}"
     include "com.enonic.xp:lib-repo:${xpVersion}"
     include "com.enonic.xp:lib-node:${xpVersion}"
     include "com.enonic.xp:lib-context:${xpVersion}"
-    include 'com.enonic.lib:license:1.0.0'
+    include "com.enonic.lib:lib-mustache:2.0.0-RC1"
+    include 'com.enonic.lib:lib-license:2.0.0-RC1'
 }
 
 repositories {
