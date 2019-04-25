@@ -9,7 +9,7 @@ app {
     name = project.appName
     displayName = 'License Manager'
     vendorName = 'Enonic AS'
-    vendorUrl = 'http://enonic.com'
+    vendorUrl = 'https://enonic.com'
     systemVersion = "${xpVersion}"
 }
 
@@ -21,8 +21,8 @@ dependencies {
     include "com.enonic.xp:lib-repo:${xpVersion}"
     include "com.enonic.xp:lib-node:${xpVersion}"
     include "com.enonic.xp:lib-context:${xpVersion}"
-    include "com.enonic.lib:lib-mustache:2.0.0-B1"
-    include 'com.enonic.lib:license:2.0.0-B1'
+    include "com.enonic.lib:lib-mustache:2.0.0-RC1"
+    include 'com.enonic.lib:lib-license:2.0.0-RC1'
 }
 
 repositories {
