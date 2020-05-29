@@ -21,8 +21,10 @@ dependencies {
     include "com.enonic.xp:lib-repo:${xpVersion}"
     include "com.enonic.xp:lib-node:${xpVersion}"
     include "com.enonic.xp:lib-context:${xpVersion}"
-    include "com.enonic.lib:lib-mustache:2.0.0-RC1"
-    include 'com.enonic.lib:lib-license:2.0.0-RC1'
+    include "com.enonic.lib:lib-mustache:2.0.0"
+
+    // Used as /lib/license in many services
+    include 'com.enonic.lib:lib-license:3.0.0'
 }
 
 repositories {
