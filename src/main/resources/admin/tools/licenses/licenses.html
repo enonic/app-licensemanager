@@ -12,6 +12,11 @@
     <link rel="stylesheet" type="text/css" href="{{assetsUri}}/css/datepicker.min.css">
     <link rel="stylesheet" type="text/css" href="{{assetsUri}}/css/main.css">
     <script defer src="{{assetsUri}}/js/fontawesome-all.min.js"></script>
+    <!--
+      Not needed for XP Menu
+      <link rel="stylesheet" type="text/css" href="{{assetsUri}}/admin/common/styles/lib.css">
+      <script type="text/javascript" src="{{assetsUri}}/admin/common/js/lib.js"></script>
+    -->
 </head>
 <body>
 <section class="hero ">
@@ -408,5 +413,14 @@
 <script src="{{assetsUri}}/js/clipboard.min.js"></script>
 <script src="{{assetsUri}}/js/datepicker.min.js"></script>
 <script src="{{assetsUri}}/js/main.js" data-svcurl="{{svcUrl}}"></script>
+<script type="text/javascript">
+    var CONFIG = {
+        appId: '{{appId}}',
+        adminUrl: '{{adminUrl}}',
+        launcherUrl: '{{launcherUrl}}',
+        services: {}, // Workaround for i18nUrl BUG
+    };
+</script>
+<script type="text/javascript" src="{{launcherPath}}" async></script>
 </body>
 </html>

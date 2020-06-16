@@ -16,11 +16,21 @@ app {
 dependencies {
     compile "com.enonic.xp:core-api:${xpVersion}"
     compile "com.enonic.xp:portal-api:${xpVersion}"
-    include "com.enonic.xp:lib-portal:${xpVersion}"
+
+    //──────────────────────────────────────────────────────────────────────────
+    // Core libs (com.enonic.xp)
+    //──────────────────────────────────────────────────────────────────────────
+    include "com.enonic.xp:lib-admin:${xpVersion}"
     include "com.enonic.xp:lib-auth:${xpVersion}"
-    include "com.enonic.xp:lib-repo:${xpVersion}"
-    include "com.enonic.xp:lib-node:${xpVersion}"
     include "com.enonic.xp:lib-context:${xpVersion}"
+    include "com.enonic.xp:lib-node:${xpVersion}"
+    include "com.enonic.xp:lib-portal:${xpVersion}"
+    include "com.enonic.xp:lib-repo:${xpVersion}"
+
+    //──────────────────────────────────────────────────────────────────────────
+    // Other enonic libs (com.enonic.lib)
+    //──────────────────────────────────────────────────────────────────────────
+    //include 'com.enonic.lib:lib-admin-ui:3.0.0' // Not needed for XP menu
     include "com.enonic.lib:lib-mustache:2.0.0"
 
     // Used as /lib/license in many services
