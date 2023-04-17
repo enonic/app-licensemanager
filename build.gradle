@@ -34,7 +34,7 @@ dependencies {
     include "com.enonic.lib:lib-mustache:2.1.0"
 
     // Used as /lib/license in many services
-    include 'com.enonic.lib:lib-license:3.0.0'
+    include 'com.enonic.lib:lib-license:3.0.1'
 }
 
 repositories {
