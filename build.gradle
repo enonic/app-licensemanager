@@ -31,7 +31,7 @@ dependencies {
     // Other enonic libs (com.enonic.lib)
     //──────────────────────────────────────────────────────────────────────────
     //include 'com.enonic.lib:lib-admin-ui:3.0.0' // Not needed for XP menu
-    include "com.enonic.lib:lib-mustache:2.1.0"
+    include "com.enonic.lib:lib-mustache:2.1.1"
 
     // Used as /lib/license in many services
     include 'com.enonic.lib:lib-license:3.0.1'
