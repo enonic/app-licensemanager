@@ -14,8 +14,8 @@ app {
 }
 
 dependencies {
-    compile "com.enonic.xp:core-api:${xpVersion}"
-    compile "com.enonic.xp:portal-api:${xpVersion}"
+    compileOnly "com.enonic.xp:core-api:${xpVersion}"
+    compileOnly "com.enonic.xp:portal-api:${xpVersion}"
 
     //──────────────────────────────────────────────────────────────────────────
     // Core libs (com.enonic.xp)
@@ -34,10 +34,11 @@ dependencies {
     include "com.enonic.lib:lib-mustache:2.1.1"
 
     // Used as /lib/license in many services
-    include 'com.enonic.lib:lib-license:3.0.1'
+    include 'com.enonic.lib:lib-license:3.1.0'
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
     xp.enonicRepo()
 }
