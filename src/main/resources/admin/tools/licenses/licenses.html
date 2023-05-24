@@ -25,9 +25,9 @@
             <div class="container">
                 <div class="navbar-brand">
                     <img src="{{assetsUri}}/img/favicon.svg" class="header-logo"/>
-                    <a class="navbar-item">
+                    <div class="navbar-item">
                         <h2 class="title header-title">License Manager</h2>
-                    </a>
+                    </div>
                 </div>
                 <div id="navbarMenuHero1" class="navbar-menu">
                     <div class="navbar-end">
@@ -421,6 +421,7 @@
         services: {}, // Workaround for i18nUrl BUG
     };
 </script>
-<script type="text/javascript" src="{{launcherPath}}" async></script>
+<!-- Append the launcher -->
+<script type="text/javascript" src="{{launcherPath}}" data-config-theme="dark" async></script>
 </body>
 </html>

@@ -4,15 +4,22 @@ textarea, input {
 
 .header-title {
     color: #ffffff;
+    font-size: 1rem;
 }
 
 .header-logo {
-    width: 32px;
-    height: 32px;
+    width: 26px;
+    height: 26px;
 }
 
 section.hero div.hero-head nav div.navbar-brand {
     align-items: center;
+}
+
+section.hero div.hero-head nav,
+section.hero div.hero-head nav > .container,
+section.hero div.hero-head nav div.navbar-brand {
+    min-height: 3.25rem;
 }
 
 div.modal-card section div.field-body {
