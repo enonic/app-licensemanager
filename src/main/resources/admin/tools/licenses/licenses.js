@@ -4,9 +4,7 @@ var portalLib = require('/lib/xp/portal');
 
 
 var assetUrl = portalLib.assetUrl;
-var getBaseUri = adminLib.getBaseUri;
-var getLauncherPath = adminLib.getLauncherPath;
-var getLauncherUrl = adminLib.getLauncherUrl;
+var getHomeToolUrl = adminLib.getHomeToolUrl;
 var render = mustacheLib.render;
 var serviceUrl = portalLib.serviceUrl;
 
@@ -18,11 +16,9 @@ exports.get = function () {
     var svcUrl = serviceUrl({service: 'Z'}).slice(0, -1);
 
     var params = {
-        adminUrl: getBaseUri(),
+        adminUrl: getHomeToolUrl(),
         appId: app.name,
         assetsUri: assetUrl({path: ''}),
-        launcherPath: getLauncherPath(),
-        launcherUrl: getLauncherUrl(),
         svcUrl: svcUrl
     };
 
