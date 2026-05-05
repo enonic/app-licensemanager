@@ -1,0 +1,4 @@
+kind: "Service"
+allow:
+  - "role:system.admin"
+  - "role:com.enonic.app.licensemanager"

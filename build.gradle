@@ -2,39 +2,30 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'com.enonic.defaults' version '2.1.6'
-    id 'com.enonic.xp.app' version '3.6.2'
-}
-
-app {
-    name = project.appName
-    displayName = 'License Manager'
-    vendorName = 'Enonic AS'
-    vendorUrl = 'https://enonic.com'
-    systemVersion = "${xpVersion}"
+    id 'com.enonic.xp.app'
 }
 
 dependencies {
-    compileOnly "com.enonic.xp:core-api:${xpVersion}"
-    compileOnly "com.enonic.xp:portal-api:${xpVersion}"
+    compileOnly xplibs.api.core
+    compileOnly xplibs.api.portal
 
     //──────────────────────────────────────────────────────────────────────────
     // Core libs (com.enonic.xp)
     //──────────────────────────────────────────────────────────────────────────
-    include "com.enonic.xp:lib-admin:${xpVersion}"
-    include "com.enonic.xp:lib-auth:${xpVersion}"
-    include "com.enonic.xp:lib-context:${xpVersion}"
-    include "com.enonic.xp:lib-node:${xpVersion}"
-    include "com.enonic.xp:lib-portal:${xpVersion}"
-    include "com.enonic.xp:lib-repo:${xpVersion}"
+    include xplibs.admin
+    include xplibs.auth
+    include xplibs.context
+    include xplibs.node
+    include xplibs.portal
+    include xplibs.repo
 
     //──────────────────────────────────────────────────────────────────────────
     // Other enonic libs (com.enonic.lib)
     //──────────────────────────────────────────────────────────────────────────
-    //include 'com.enonic.lib:lib-admin-ui:3.0.0' // Not needed for XP menu
-    include "com.enonic.lib:lib-mustache:2.1.1"
+    include libs.lib.mustache
 
     // Used as /lib/license in many services
-    include 'com.enonic.lib:lib-license:3.1.0'
+    include libs.lib.license
 }
 
 repositories {
