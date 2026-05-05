@@ -1,22 +1,26 @@
-var mustacheLib = require('/lib/mustache');
-var portalLib = require('/lib/xp/portal');
+const mustacheLib = require('/lib/mustache');
+const portalLib = require('/lib/xp/portal');
+const adminLib = require('/lib/xp/admin');
 
+const assetUrl = portalLib.assetUrl;
+const render = mustacheLib.render;
+const serviceUrl = portalLib.serviceUrl;
 
-var assetUrl = portalLib.assetUrl;
-var render = mustacheLib.render;
-var serviceUrl = portalLib.serviceUrl;
-
-
-var VIEW = resolve('licenses.html');
-
+const VIEW = resolve('licenses.html');
 
 exports.get = function () {
-    var svcUrl = serviceUrl({service: 'Z'}).slice(0, -1);
+    const svcUrl = serviceUrl({service: 'Z'}).slice(0, -1);
 
-    var params = {
-        appId: app.name,
+    const params = {
         assetsUri: assetUrl({path: ''}),
-        svcUrl: svcUrl
+        svcUrl: svcUrl,
+        menuLoaderUrl: adminLib.extensionUrl({
+            application: 'com.enonic.xp.app.main',
+            extension: 'menu-loader',
+            params: {
+                theme: 'dark'
+            }
+        }),
     };
 
     return {

@@ -23,7 +23,7 @@ section.hero div.hero-head nav div.navbar-brand {
 section.hero div.hero-head nav,
 section.hero div.hero-head nav > .container,
 section.hero div.hero-head nav div.navbar-brand {
-    min-height: 3.25rem;
+    min-height: 4.25rem;
 }
 
 div.modal-card section div.field-body {

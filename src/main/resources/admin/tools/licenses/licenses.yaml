@@ -4,3 +4,5 @@ description: "Issue and manage licenses"
 allow:
   - "role:system.admin"
   - "role:com.enonic.app.licensemanager"
+apis:
+  - "admin:extension"
