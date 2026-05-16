@@ -1,7 +1,9 @@
 [versions]
+lib-asset = "2.0.0-SNAPSHOT"
 lib-mustache = "2.1.1"
 lib-license = "4.0.0-SNAPSHOT"
 
 [libraries]
+lib-asset = { module = "com.enonic.lib:lib-asset", version.ref = "lib-asset" }
 lib-mustache = { module = "com.enonic.lib:lib-mustache", version.ref = "lib-mustache" }
 lib-license = { module = "com.enonic.lib:lib-license", version.ref = "lib-license" }

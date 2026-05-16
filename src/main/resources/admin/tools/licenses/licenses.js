@@ -1,8 +1,9 @@
 const mustacheLib = require('/lib/mustache');
 const portalLib = require('/lib/xp/portal');
 const adminLib = require('/lib/xp/admin');
+const assetLib = require('/lib/enonic/asset');
 
-const assetUrl = portalLib.assetUrl;
+const assetUrl = assetLib.assetUrl;
 const render = mustacheLib.render;
 const serviceUrl = portalLib.serviceUrl;
 
