@@ -6,3 +6,4 @@ allow:
   - "role:com.enonic.app.licensemanager"
 apis:
   - "admin:extension"
+  - "asset"

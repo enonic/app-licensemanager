@@ -22,6 +22,7 @@ dependencies {
     //──────────────────────────────────────────────────────────────────────────
     // Other enonic libs (com.enonic.lib)
     //──────────────────────────────────────────────────────────────────────────
+    include libs.lib.asset
     include libs.lib.mustache
 
     // Used as /lib/license in many services
