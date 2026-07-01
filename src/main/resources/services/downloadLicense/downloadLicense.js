@@ -13,8 +13,18 @@ exports.get = function (req) {
     var app = storeLib.getApplicationByLicenseId(req.params.id);
 
     var body = license.license;
-    var fileName = storeLib.prettifyName(license.issuedTo) + '-' + storeLib.prettifyName(app.displayName) + '-' +
-                   license.issueTime.substring(0, 10) + '.lic';
+
+    var parts = [];
+    if (license.issuedTo) {
+        parts.push(storeLib.prettifyName(license.issuedTo));
+    }
+    if (app && app.displayName) {
+        parts.push(storeLib.prettifyName(app.displayName));
+    }
+    if (license.issueTime) {
+        parts.push(license.issueTime.substring(0, 10));
+    }
+    var fileName = (parts.length ? parts.join('-') : 'license') + '.lic';
 
     return {
         contentType: 'text/plain',
