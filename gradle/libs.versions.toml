@@ -1,5 +1,5 @@
 [versions]
-lib-asset = "2.0.0"
+lib-asset = "2.0.1"
 lib-mustache = "3.0.0"
 lib-license = "4.0.0"
 
