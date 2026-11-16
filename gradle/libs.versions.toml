@@ -1,7 +1,7 @@
 [versions]
 lib-asset = "2.0.1"
 lib-mustache = "3.0.0"
-lib-license = "4.0.0"
+lib-license = "4.0.1"
 
 [libraries]
 lib-asset = { module = "com.enonic.lib:lib-asset", version.ref = "lib-asset" }
